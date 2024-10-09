@@ -20,5 +20,7 @@ from product_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name="base"),
+    path('', views.index, name="index"),
+    path('signin/', views.signin, name='signin'),
+    path('register/', views.register, name='register'),
 ]

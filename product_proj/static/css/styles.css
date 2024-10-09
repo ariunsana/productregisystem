@@ -176,6 +176,77 @@ body {
   align-items: center;
   justify-content: center;
 }
+/* ---------- SIGN-IN CONTAINER ---------- */
+/* ---------- SIGN-IN CONTAINER ---------- */
+.signin-container {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Gradient background */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Stronger shadow for depth */
+  max-width: 400px;
+  margin: 100px auto; /* Centered and more margin */
+  color: #fff; /* White text for contrast */
+}
+
+.signin-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #f5f7ff;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.signin-container input[type="text"],
+.signin-container input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border: none;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent inputs */
+  color: #fff;
+  font-size: 16px;
+}
+
+.signin-container input[type="text"]::placeholder,
+.signin-container input[type="email"]::placeholder
+.signin-container input[type="password"]::placeholder {
+  color: #ddd; /* Placeholder color */
+}
+
+.signin-container input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); /* Gradient button */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.signin-container input[type="submit"]:hover {
+  background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%); /* Reverse gradient on hover */
+}
+
+.signin-container .signup-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.signin-container .signup-link a {
+  color: #f5f7ff;
+  text-decoration: underline;
+}
+
+.signin-container .signup-link a:hover {
+  color: #ff416c; /* Change link color on hover */
+}
+
 
 /* ---------- MEDIA QUERIES ---------- */
 
@@ -225,3 +296,4 @@ body {
     display: none;
   }
 }
+

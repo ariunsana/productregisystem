@@ -1,5 +1,4 @@
 // SIDEBAR TOGGLE
-
 let sidebarOpen = false;
 const sidebar = document.getElementById("sidebar");
 
@@ -91,34 +90,11 @@ const barChartOptions = {
       show: true,
       color: "#55596e",
     },
-    axisTicks: {
-      show: true,
-      color: "#55596e",
-    },
-    labels: {
-      style: {
-        colors: "#f5f7ff",
-      },
-    },
   },
   yaxis: {
-    title: {
-      text: "Count",
-      style: {
-        color: "#f5f7ff",
-      },
-    },
-    axisBorder: {
-      color: "#55596e",
-      show: true,
-    },
-    axisTicks: {
-      color: "#55596e",
-      show: true,
-    },
     labels: {
       style: {
-        colors: "#f5f7ff",
+        colors: ["#f5f7ff"],
       },
     },
   },
@@ -134,11 +110,11 @@ barChart.render();
 const areaChartOptions = {
   series: [
     {
-      name: "Purchase Orders",
+      name: "Sales Orders",
       data: [31, 40, 28, 51, 42, 109, 100],
     },
     {
-      name: "Sales Orders",
+      name: "Purchases Orders",
       data: [11, 32, 45, 32, 34, 52, 41],
     },
   ],
@@ -151,8 +127,7 @@ const areaChartOptions = {
       show: false,
     },
   },
-  colors: ["#00ab57", "#d50000"],
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+  colors: ["#2962ff", "#d50000"],
   dataLabels: {
     enabled: false,
   },
@@ -160,11 +135,8 @@ const areaChartOptions = {
     gradient: {
       opacityFrom: 0.4,
       opacityTo: 0.1,
-      shadeIntensity: 1,
-      stops: [0, 100],
-      type: "vertical",
+      stops: [0, 90, 100],
     },
-    type: "gradient",
   },
   grid: {
     borderColor: "#55596e",
@@ -186,59 +158,29 @@ const areaChartOptions = {
     show: true,
     position: "top",
   },
-  markers: {
-    size: 6,
-    strokeColors: "#1b2635",
-    strokeWidth: 3,
-  },
   stroke: {
     curve: "smooth",
+    width: 2,
   },
   xaxis: {
-    axisBorder: {
-      color: "#55596e",
-      show: true,
-    },
-    axisTicks: {
-      color: "#55596e",
-      show: true,
-    },
-    labels: {
-      offsetY: 5,
+    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    title: {
       style: {
-        colors: "#f5f7ff",
+        color: "#f5f7ff",
+      },
+    },
+    axisBorder: {
+      show: true,
+      color: "#55596e",
+    },
+  },
+  yaxis: {
+    labels: {
+      style: {
+        colors: ["#f5f7ff"],
       },
     },
   },
-  yaxis: [
-    {
-      title: {
-        text: "Purchase Orders",
-        style: {
-          color: "#f5f7ff",
-        },
-      },
-      labels: {
-        style: {
-          colors: ["#f5f7ff"],
-        },
-      },
-    },
-    {
-      opposite: true,
-      title: {
-        text: "Sales Orders",
-        style: {
-          color: "#f5f7ff",
-        },
-      },
-      labels: {
-        style: {
-          colors: ["#f5f7ff"],
-        },
-      },
-    },
-  ],
   tooltip: {
     shared: true,
     intersect: false,
