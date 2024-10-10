@@ -297,3 +297,156 @@ body {
   }
 }
 
+/* ---------- PRODUCT GRID CONTAINER ---------- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Automatically adjust column count */
+  gap: 20px; /* Gap between product items */
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 1000px;
+}
+
+/* ---------- MAIN CONTAINER ---------- */
+.product-box-container {
+  display: flex;
+  align-items: flex-start; /* Align the product boxes to the top */
+  background-color: #2a3b5a; /* Same background as the sidebar */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 100%; /* Full width */
+  overflow-x: auto; /* Add horizontal scrolling if items overflow */
+  margin: 30px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #f5f7ff;
+}
+
+/* ---------- PRODUCT ITEM CONTAINER ---------- */
+.product-container {
+  background-color: #2a3b5a;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #f5f7ff;
+  width: 150px; /* Fixed size for each box */
+  margin-right: 20px; /* Spacing between boxes */
+}
+
+.product-container img {
+  border-radius: 8px;
+  max-width: 100px;
+  height: 100px; /* Ensure the image is a square */
+  object-fit: cover; /* Ensure the image covers the square */
+  margin-bottom: 10px;
+}
+
+.product-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.product-description {
+  font-size: 12px;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.product-price {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff416c;
+}
+
+/* ---------- MAIN CONTAINER ---------- */
+.product-box-container {
+  display: flex;
+  flex-wrap: wrap; /* Enables wrapping to new rows */
+  justify-content: flex-start; /* Align items to the left */
+  background-color: #2a3b5a;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 100%; /* Full width */
+  margin: 30px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #f5f7ff;
+}
+
+/* ---------- MAIN CONTAINER ---------- */
+.product-box-container {
+  display: flex;
+  flex-wrap: wrap; /* Enables wrapping to new rows */
+  justify-content: flex-start; /* Align items to the left */
+  background-color: #2a3b5a;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 100%; /* Full width */
+  margin: 30px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #f5f7ff;
+}
+
+/* ---------- PRODUCT ITEM CONTAINER ---------- */
+.product-container {
+  background-color: #2a3b5a;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #f5f7ff;
+  width: 130px; /* Slightly reduced size */
+  margin: 10px; /* Spacing between boxes */
+}
+
+.product-container img {
+  border-radius: 8px;
+  max-width: 80px; /* Reduced image size */
+  height: 80px; /* Ensure aspect ratio is maintained */
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.product-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.product-description {
+  font-size: 12px;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.product-price {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff416c;
+}
+
+/* Responsive for smaller screens */
+@media screen and (max-width: 768px) {
+  .product-container {
+    width: 110px; /* Adjust size for smaller screens */
+  }
+
+  .product-container img {
+    max-width: 70px;
+    height: 70px;
+  }
+
+  .product-title {
+    font-size: 12px;
+  }
+
+  .product-description {
+    font-size: 10px;
+  }
+
+  .product-price {
+    font-size: 12px;
+  }
+}
+
+

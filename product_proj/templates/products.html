@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ss %}
+
+{% include 'sidebar.html' %}
+
+<div class="product-box-container">
+  <div class="product-container">
+    <img src="{% static 'images/1.png' %}" alt="Product Image">
+    <h2 class="product-title">crown 210</h2>
+    <p class="product-description">High-quality sound with noise cancellation.</p>
+    <p class="product-price">$129.99</p>
+  </div>
+
+  <div class="product-container">
+    <img src="{% static 'images/1.png' %}" alt="Product Image">
+    <h2 class="product-title">land 200</h2>
+    <p class="product-description">Portable and powerful sound.</p>
+    <p class="product-price">$59.99</p>
+  </div>
+
+  <div class="product-container">
+    <img src="{% static 'images/1.png' %}" alt="Product Image">
+    <h2 class="product-title">land 300</h2>
+    <p class="product-description">Track your fitness and notifications.</p>
+    <p class="product-price">$199.99</p>
+  </div>
+
+  <!-- Add more products here -->
+</div>
+
+{% endblock %}
