@@ -7,24 +7,38 @@
     <title>Register</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+            },
+            colors: {
+              'primary': '#1e3c72',
+              'secondary': '#2a5298',
+            },
+          }
+        }
+      }
+    </script>
     <script defer src="{% url 'register' %}"></script>
 </head>
-<body>
-        <!-- Main Section -->
-        <div class="signin-container">
-            <h2>Register</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <input type="text" placeholder="Username" name="username">
-                <input type="email" placeholder="Email" name="email">
-                <input type="password" placeholder="Password" name="password1">
-                <input type="password" placeholder="Confirm Password" name="password2">
-                <input type="submit" value="Register">
-            </form>
-            <div class="signup-link">
-              <p>Already have an account? <a href="{% url 'signin' %}">Sign In</a></p>
-            </div>
+<body class="bg-gradient-to-br from-primary to-secondary min-h-screen flex items-center justify-center font-sans">
+    <div class="bg-white bg-opacity-10 p-8 rounded-xl shadow-lg max-w-md w-full">
+        <h2 class="text-3xl font-bold text-center text-white mb-6">Register</h2>
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            <input type="text" placeholder="Username" name="username" class="w-full p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <input type="email" placeholder="Email" name="email" class="w-full p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <input type="password" placeholder="Password" name="password1" class="w-full p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <input type="password" placeholder="Confirm Password" name="password2" class="w-full p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <input type="submit" value="Register" class="w-full p-3 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold rounded-md cursor-pointer hover:from-pink-600 hover:to-red-600 transition duration-300">
+        </form>
+        <div class="text-center mt-4">
+            <p class="text-white">Already have an account? <a href="{% url 'signin' %}" class="text-blue-300 hover:text-blue-200">Sign In</a></p>
         </div>
+    </div>
 </body>
 </html>

@@ -1,54 +1,69 @@
-<aside id="sidebar">
-  <div class="sidebar-title">
-    <div class="sidebar-brand">
+<aside id="sidebar" class="bg-secondary h-full w-64 fixed left-0 top-0 overflow-y-auto transition-transform duration-300 ease-in-out transform -translate-x-full lg:translate-x-0">
+  <div class="flex justify-between items-center p-4 border-b border-gray-700">
+    <div class="flex items-center space-x-2 text-white font-bold">
       <span class="material-icons-outlined">shopping_cart</span>
-      REGISTRATION
+      <span>REGISTRATION</span>
     </div>
-    <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+    <button onclick="closeSidebar()" class="text-white lg:hidden">
+      <span class="material-icons-outlined">close</span>
+    </button>
+    <button onclick="openSidebar()" class="lg:hidden">
+      <span class="material-icons-outlined">menu</span>
+    </button>
   </div>
 
-  <ul class="sidebar-list">
-    <li class="sidebar-list-item">
-      <a href="{% url 'index' %}">
-        <span class="material-icons-outlined">dashboard</span> Хяналтын самбар
+  <ul class="py-4">
+    <li class="px-4 py-2 hover:bg-gray-700">
+      <a href="{% url 'index' %}" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+        <span class="material-icons-outlined">dashboard</span>
+        <span>Хяналтын самбар</span>
       </a>
     </li>
-    <li class="sidebar-list-item">
-      <a href="{% url 'products' %}">
-        <span class="material-icons-outlined">inventory_2</span> Бараа
+    <li class="px-4 py-2 hover:bg-gray-700">
+      <a href="{% url 'products' %}" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+        <span class="material-icons-outlined">inventory_2</span>
+        <span>Бараа</span>
       </a>
     </li>
-    <li class="sidebar-list-item">
-      <a href="#">
-        <span class="material-icons-outlined">category</span> Төрөл
+    <li class="px-4 py-2 hover:bg-gray-700">
+      <a href="#" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+        <span class="material-icons-outlined">category</span>
+        <span>Төрөл</span>
       </a>
     </li>
-    <li class="sidebar-list-item">
-      <a href="#">
-        <span class="material-icons-outlined">groups</span> Худалдагч
+    <li class="px-4 py-2 hover:bg-gray-700">
+      <a href="#" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+        <span class="material-icons-outlined">groups</span>
+        <span>Худалдагч</span>
       </a>
     </li>
-    <li class="sidebar-list-item">
-      <a href="#">
-        <span class="material-icons-outlined">store</span> Салбар
+    <li class="px-4 py-2 hover:bg-gray-700">
+      <a href="#" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+        <span class="material-icons-outlined">store</span>
+        <span>Салбар</span>
       </a>
     </li>
-    <li class="sidebar-list-item">
-      <a href="#">
-        <span class="material-icons-outlined">poll</span> Тайлан
+    <li class="px-4 py-2 hover:bg-gray-700">
+      <a href="#" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+        <span class="material-icons-outlined">poll</span>
+        <span>Тайлан</span>
       </a>
     </li>
-    <li class="sidebar-list-item">
-      <a href="#">
-        <span class="material-icons-outlined">settings</span> Тохиргоо
+    <li class="px-4 py-2 hover:bg-gray-700">
+      <a href="#" class="flex items-center space-x-2 text-gray-300 hover:text-white">
+        <span class="material-icons-outlined">settings</span>
+        <span>Тохиргоо</span>
       </a>
     </li>
   </ul>
 </aside>
 
 <script>
-  // Function to close the sidebar
   function closeSidebar() {
-    document.getElementById('sidebar').style.display = 'none';
+    document.getElementById('sidebar').classList.add('-translate-x-full');
+  }
+
+  function openSidebar() {
+    document.getElementById('sidebar').classList.remove('-translate-x-full');
   }
 </script>

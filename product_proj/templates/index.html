@@ -2,36 +2,61 @@
 {% load static %}
 {% block ss %}
 
-      <!-- Sidebar -->
-      {% include 'sidebar.html' %}
+  <!-- Sidebar -->
+  {% include 'sidebar.html' %}
 
-      <!-- Main -->
-      <main class="main-container">
-        <div class="main-title"><h2>ХЯНАЛТЫН САМБАР</h2></div>
-        <div class="main-cards">
-          <div class="card"><div class="card-inner"><h3>БАРАА</h3><span class="material-icons-outlined">inventory_2</span></div><h1>249</h1></div>
-          <div class="card"><div class="card-inner"><h3>ТӨРӨЛ</h3><span class="material-icons-outlined">category</span></div><h1>25</h1></div>
-          <div class="card"><div class="card-inner"><h3>ХУДАЛДАГЧ</h3><span class="material-icons-outlined">groups</span></div><h1>10</h1></div>
-          <div class="card"><div class="card-inner"><h3>МЭДЭЭ</h3><span class="material-icons-outlined">notification_important</span></div><h1>10</h1></div>
+  <!-- Main -->
+  <main class="col-span-full lg:col-start-2 row-start-2 overflow-y-auto p-8">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-bold">ХЯНАЛТЫН САМБАР</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-blue-600 rounded-lg p-6 shadow-md">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold">БАРАА</h3>
+          <span class="material-icons-outlined text-3xl">inventory_2</span>
         </div>
-
-        <div class="charts">
-          <div class="charts-card">
-            <h2 class="chart-title">Шилдэг 5 бүтээгдэхүүн</h2>
-            <div id="bar-chart"></div>
-          </div>
-          <div class="charts-card">
-            <h2 class="chart-title">Худалдан авалт, борлуулалтын захиалга</h2>
-            <div id="area-chart"></div>
-          </div>
+        <h1 class="text-3xl font-bold">249</h1>
+      </div>
+      <div class="bg-orange-600 rounded-lg p-6 shadow-md">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold">ТӨРӨЛ</h3>
+          <span class="material-icons-outlined text-3xl">category</span>
         </div>
-      </main>
-      <!-- End Main -->
+        <h1 class="text-3xl font-bold">25</h1>
+      </div>
+      <div class="bg-green-600 rounded-lg p-6 shadow-md">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold">ХУДАЛДАГЧ</h3>
+          <span class="material-icons-outlined text-3xl">groups</span>
+        </div>
+        <h1 class="text-3xl font-bold">10</h1>
+      </div>
+      <div class="bg-red-600 rounded-lg p-6 shadow-md">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold">МЭДЭЭ</h3>
+          <span class="material-icons-outlined text-3xl">notification_important</span>
+        </div>
+        <h1 class="text-3xl font-bold">10</h1>
+      </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script>
-    <script src="{% static 'js/scripts.js' %}"></script>
-  </body>
-</html>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="bg-secondary rounded-lg p-6 shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-center">Шилдэг 5 бүтээгдэхүүн</h2>
+        <div id="bar-chart"></div>
+      </div>
+      <div class="bg-secondary rounded-lg p-6 shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-center">Худалдан авалт, борлуулалтын захиалга</h2>
+        <div id="area-chart"></div>
+      </div>
+    </div>
+  </main>
+  <!-- End Main -->
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
+
 {% endblock %}

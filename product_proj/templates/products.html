@@ -4,29 +4,37 @@
 
 {% include 'sidebar.html' %}
 
-<div class="product-box-container">
-  <div class="product-container">
-    <img src="{% static 'images/1.png' %}" alt="Product Image">
-    <h2 class="product-title">crown 210</h2>
-    <p class="product-description">High-quality sound with noise cancellation.</p>
-    <p class="product-price">$129.99</p>
-  </div>
+<main class="col-span-full lg:col-start-2 row-start-2 overflow-y-auto p-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="bg-secondary rounded-lg overflow-hidden shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
+      <img src="{% static 'images/1.png' %}" alt="Product Image" class="w-full h-48 object-cover border-b-2 border-gray-700">
+      <div class="p-4 flex flex-col h-full">
+        <h2 class="text-lg font-semibold text-gray-100 mb-2">Crown 210</h2>
+        <p class="text-sm text-gray-400 mb-4 flex-grow">High-quality sound with noise cancellation.</p>
+        <p class="text-xl font-bold text-green-500 self-end">$129.99</p>
+      </div>
+    </div>
 
-  <div class="product-container">
-    <img src="{% static 'images/1.png' %}" alt="Product Image">
-    <h2 class="product-title">land 200</h2>
-    <p class="product-description">Portable and powerful sound.</p>
-    <p class="product-price">$59.99</p>
-  </div>
+    <div class="bg-secondary rounded-lg overflow-hidden shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
+      <img src="{% static 'images/1.png' %}" alt="Product Image" class="w-full h-48 object-cover border-b-2 border-gray-700">
+      <div class="p-4 flex flex-col h-full">
+        <h2 class="text-lg font-semibold text-gray-100 mb-2">Land 200</h2>
+        <p class="text-sm text-gray-400 mb-4 flex-grow">Portable and powerful sound.</p>
+        <p class="text-xl font-bold text-green-500 self-end">$59.99</p>
+      </div>
+    </div>
 
-  <div class="product-container">
-    <img src="{% static 'images/1.png' %}" alt="Product Image">
-    <h2 class="product-title">land 300</h2>
-    <p class="product-description">Track your fitness and notifications.</p>
-    <p class="product-price">$199.99</p>
-  </div>
+    <div class="bg-secondary rounded-lg overflow-hidden shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
+      <img src="{% static 'images/1.png' %}" alt="Product Image" class="w-full h-48 object-cover border-b-2 border-gray-700">
+      <div class="p-4 flex flex-col h-full">
+        <h2 class="text-lg font-semibold text-gray-100 mb-2">Land 300</h2>
+        <p class="text-sm text-gray-400 mb-4 flex-grow">Track your fitness and notifications.</p>
+        <p class="text-xl font-bold text-green-500 self-end">$199.99</p>
+      </div>
+    </div>
 
-  <!-- Add more products here -->
-</div>
+    <!-- Add more products here -->
+  </div>
+</main>
 
 {% endblock %}

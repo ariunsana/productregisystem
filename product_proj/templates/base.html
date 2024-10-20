@@ -12,27 +12,51 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+            },
+            colors: {
+              'primary': '#1d2634',
+              'secondary': '#263043',
+            },
+          }
+        }
+      }
+    </script>
   </head>
-  <body>
-    <div class="grid-container">
+  <body class="bg-primary text-gray-300 font-sans">
+    <div class="grid grid-cols-1 lg:grid-cols-[260px_1fr] grid-rows-[auto_1fr] h-screen">
       <!-- Header -->
-      <header class="header">
-        <div class="menu-icon" onclick="openSidebar()">
-          <span class="material-icons-outlined">menu</span>
+      <header class="col-span-full lg:col-start-2 h-[70px] flex items-center justify-between px-8 bg-secondary shadow-md">
+        <div class="lg:hidden cursor-pointer" onclick="openSidebar()">
+          <span class="material-icons-outlined text-3xl">menu</span>
         </div>
-        <div class="header-left">
-          <span class="material-icons-outlined">search</span>
+        <div class="hidden lg:flex items-center">
+          <span class="material-icons-outlined text-3xl">search</span>
         </div>
-        <div class="header-right">
-          <span class="material-icons-outlined">notifications</span>
+        <div class="flex items-center space-x-4">
+          <span class="material-icons-outlined text-3xl">notifications</span>
           <a href="{% url 'signin' %}">
-            <span class="material-icons-outlined">account_circle</span>
+            <span class="material-icons-outlined text-3xl">account_circle</span>
           </a>
         </div>
       </header>
       <!-- End Header -->
-      {% block ss %}
 
+      {% block ss %}
       {% endblock %}
+    </div>
+
+    <script>
+      function openSidebar() {
+        document.querySelector('#sidebar').classList.toggle('-translate-x-full');
+      }
+    </script>
+  </body>
+</html>
