@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ss %}
+
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white mb-4">Худалдагчид</h2>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+            <div class="relative w-full sm:w-64">
+                <input type="text" placeholder="Хайх..." class="w-full bg-secondary text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <span class="material-icons-outlined absolute left-3 top-2 text-gray-400">search</span>
+            </div>
+            <button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2">
+                <span class="material-icons-outlined">person_add</span>
+                <span>Шинэ худалдагч</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Sellers Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Seller Card 1 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="relative">
+                <img src="{% static 'images/profile1.jpg' %}" alt="Seller Profile" class="w-full h-48 object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <span class="px-2 py-1 bg-green-500 text-white text-sm rounded-full">Идэвхтэй</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-1">Б. Болд</h3>
+                <p class="text-sm text-gray-400 mb-3">ID: #12345</p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Борлуулалт</p>
+                        <p class="text-lg font-semibold text-white">₮1,250,000</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Бараа</p>
+                        <p class="text-lg font-semibold text-white">25</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="material-icons-outlined text-yellow-500">star</span>
+                        <span class="text-white">4.8</span>
+                    </div>
+                    <button class="text-blue-400 hover:text-blue-300">
+                        <span class="material-icons-outlined">edit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seller Card 2 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="relative">
+                <img src="{% static 'images/profile2.jpg' %}" alt="Seller Profile" class="w-full h-48 object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <span class="px-2 py-1 bg-green-500 text-white text-sm rounded-full">Идэвхтэй</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-1">Д. Сарнай</h3>
+                <p class="text-sm text-gray-400 mb-3">ID: #12346</p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Борлуулалт</p>
+                        <p class="text-lg font-semibold text-white">₮2,150,000</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Бараа</p>
+                        <p class="text-lg font-semibold text-white">32</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="material-icons-outlined text-yellow-500">star</span>
+                        <span class="text-white">4.9</span>
+                    </div>
+                    <button class="text-blue-400 hover:text-blue-300">
+                        <span class="material-icons-outlined">edit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seller Card 3 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="relative">
+                <img src="{% static 'images/profile3.jpg' %}" alt="Seller Profile" class="w-full h-48 object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <span class="px-2 py-1 bg-yellow-500 text-white text-sm rounded-full">Завгүй</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-1">Г. Төгөлдөр</h3>
+                <p class="text-sm text-gray-400 mb-3">ID: #12347</p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Борлуулалт</p>
+                        <p class="text-lg font-semibold text-white">₮1,850,000</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Бараа</p>
+                        <p class="text-lg font-semibold text-white">28</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="material-icons-outlined text-yellow-500">star</span>
+                        <span class="text-white">4.7</span>
+                    </div>
+                    <button class="text-blue-400 hover:text-blue-300">
+                        <span class="material-icons-outlined">edit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %} 

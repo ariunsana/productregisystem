@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ss %}
+
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white mb-4">Салбарууд</h2>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+            <div class="relative w-full sm:w-64">
+                <input type="text" placeholder="Хайх..." class="w-full bg-secondary text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <span class="material-icons-outlined absolute left-3 top-2 text-gray-400">search</span>
+            </div>
+            <button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2">
+                <span class="material-icons-outlined">add_location</span>
+                <span>Шинэ салбар</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Branches Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Branch Card 1 - Han-Uul -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="relative">
+                <img src="{% static 'images/khan-uul.png' %}" alt="Han-Uul Branch" class="w-full h-48 object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <span class="px-2 py-1 bg-green-500 text-white text-sm rounded-full">Нээлттэй</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-1">Хан-Уул салбар</h3>
+                <div class="flex items-center text-gray-400 mb-3">
+                    <span class="material-icons-outlined mr-2 text-sm">location_on</span>
+                    <p class="text-sm">Монгол улс, Улаанбаатар хот, Хан-Уул дүүрэг, 15-р хороо, Стадион Оргил (17011), Их монгол улсын гудамж 71, Имарт Хан-Уул салбар</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Ажилтан</p>
+                        <p class="text-lg font-semibold text-white">2</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Борлуулалт</p>
+                        <p class="text-lg font-semibold text-green-500">₮2.5M</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-400">
+                    <p>Ажиллах цаг: 10:00 - 20:00</p>
+                    <span class="material-icons-outlined text-blue-400 hover:text-blue-300 cursor-pointer">edit</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branch Card 2 - Sansar -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="relative">
+                <img src="{% static 'images/sansar.png' %}" alt="Sansar Branch" class="w-full h-48 object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <span class="px-2 py-1 bg-green-500 text-white text-sm rounded-full">Нээлттэй</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-1">Сансар салбар</h3>
+                <div class="flex items-center text-gray-400 mb-3">
+                    <span class="material-icons-outlined mr-2 text-sm">location_on</span>
+                    <p class="text-sm">Монгол улс, Улаанбаатар хот, Баянзүрх дүүрэг, 1-р хороо, 12-р хороолол (13381), Токиогийн гудамж-23, Имарт Чингис</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Ажилтан</p>
+                        <p class="text-lg font-semibold text-white">2</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Борлуулалт</p>
+                        <p class="text-lg font-semibold text-green-500">₮1.8M</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-400">
+                    <p>Ажиллах цаг: 09:00 - 20:30</p>
+                    <span class="material-icons-outlined text-blue-400 hover:text-blue-300 cursor-pointer">edit</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branch Card 3 - 10th District -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="relative">
+                <img src="{% static 'images/10emart.png' %}" alt="10th District Branch" class="w-full h-48 object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <span class="px-2 py-1 bg-yellow-500 text-white text-sm rounded-full">Засвартай</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-1">10-р хороолол салбар</h3>
+                <div class="flex items-center text-gray-400 mb-3">
+                    <span class="material-icons-outlined mr-2 text-sm">location_on</span>
+                    <p class="text-sm">Улаанбаатар 16080, Баянгол дүүрэг 6-хороо, бигдүү хороолол 57/22-р</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-400">Ажилтан</p>
+                        <p class="text-lg font-semibold text-white">3</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Борлуулалт</p>
+                        <p class="text-lg font-semibold text-green-500">₮2.1M</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-400">
+                    <p>Ажиллах цаг: 09:00 - 20:30</p>
+                    <span class="material-icons-outlined text-blue-400 hover:text-blue-300 cursor-pointer">edit</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

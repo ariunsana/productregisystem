@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ss %}
+
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white mb-4">Бүтээгдэхүүний ангилал</h2>
+        <div class="flex justify-between items-center mb-6">
+            <div class="relative">
+                <input type="text" placeholder="Хайх..." class="bg-secondary text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <span class="material-icons-outlined absolute left-3 top-2 text-gray-400">search</span>
+            </div>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                <span class="material-icons-outlined">add</span>
+                <span>Шинэ ангилал</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Category Card 1 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="relative h-48">
+                <img src="{% static 'images/carpet.jpg' %}" alt="Carpet" class="w-full h-full object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Шалавч</h3>
+                <div class="flex justify-between items-center text-gray-400">
+                    <span>Нийт: 25 бараа</span>
+                    <span class="material-icons-outlined">chevron_right</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Card 2 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="relative h-48">
+                <img src="{% static 'images/towel.jpg' %}" alt="Towel" class="w-full h-full object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Алчуур</h3>
+                <div class="flex justify-between items-center text-gray-400">
+                    <span>Нийт: 15 бараа</span>
+                    <span class="material-icons-outlined">chevron_right</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Card 3 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="relative h-48">
+                <img src="{% static 'images/wiper.jpg' %}" alt="Windshield Wiper" class="w-full h-full object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Шил арчигч</h3>
+                <div class="flex justify-between items-center text-gray-400">
+                    <span>Нийт: 30 бараа</span>
+                    <span class="material-icons-outlined">chevron_right</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Card 4 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="relative h-48">
+                <img src="{% static 'images/phone-holder.jpg' %}" alt="Phone Holder" class="w-full h-full object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Утасны суурь</h3>
+                <div class="flex justify-between items-center text-gray-400">
+                    <span>Нийт: 20 бараа</span>
+                    <span class="material-icons-outlined">chevron_right</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Card 5 -->
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="relative h-48">
+                <img src="{% static 'images/box.jpg' %}" alt="Box" class="w-full h-full object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Хайрцаг</h3>
+                <div class="flex justify-between items-center text-gray-400">
+                    <span>Нийт: 10 бараа</span>
+                    <span class="material-icons-outlined">chevron_right</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
