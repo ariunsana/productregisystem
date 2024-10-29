@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Нэвтрэх</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -16,27 +16,68 @@
               sans: ['Montserrat', 'sans-serif'],
             },
             colors: {
-              'primary': '#1e3c72',
-              'secondary': '#2a5298',
+              'primary': '#0f172a',
+              'secondary': '#1e293b',
             },
           }
         }
       }
     </script>
-    <script defer src="{% url 'signin' %}"></script>
 </head>
-<body class="bg-gradient-to-br from-primary to-secondary min-h-screen flex items-center justify-center font-sans">
-    <div class="bg-white bg-opacity-10 p-8 rounded-xl shadow-lg max-w-md w-full">
-        <h2 class="text-3xl font-bold text-center text-white mb-6">Sign In</h2>
-        <form class="space-y-4">
-            <input type="text" placeholder="Username" class="w-full p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
-            <input type="password" placeholder="Password" class="w-full p-3 rounded-md bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
-            <a href="{% url 'index' %}" class="block">
-                <input type="submit" value="Sign In" class="w-full p-3 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold rounded-md cursor-pointer hover:from-pink-600 hover:to-red-600 transition duration-300">
-            </a>
-        </form>
-        <div class="text-center mt-4">
-            <p class="text-white">Don't have an account? <a href="{% url 'register' %}" class="text-blue-300 hover:text-blue-200">Register</a></p>
+<body class="bg-gradient-to-br from-primary to-secondary min-h-screen flex items-center justify-center p-4 font-sans">
+    <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="h-20 w-auto mx-auto mb-6">
+            <h1 class="text-3xl font-bold text-white">Админ удирдлагын систем</h1>
+        </div>
+
+        <!-- Sign In Form -->
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-6">Нэвтрэх</h2>
+            <form class="space-y-5">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-300">Нэвтрэх нэр</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <span class="material-icons-outlined text-xl">person_outline</span>
+                        </span>
+                        <input type="text" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-300">Нууц үг</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <span class="material-icons-outlined text-xl">lock_outline</span>
+                        </span>
+                        <input type="password" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-white/10">
+                        <span class="ml-2 text-sm text-gray-300">Сануулах</span>
+                    </label>
+                    <a href="#" class="text-sm text-blue-400 hover:text-blue-300">Нууц үг мартсан?</a>
+                </div>
+
+                <a href="{% url 'index' %}">
+                    <button type="submit" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition duration-200 ease-in-out transform hover:scale-[1.02]">
+                        Нэвтрэх
+                    </button>
+                </a>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <p class="text-gray-400">
+                Бүртгэл байхгүй юу? 
+                <a href="{% url 'register' %}" class="text-blue-400 hover:text-blue-300 font-medium">Бүртгүүлэх</a>
+            </p>
         </div>
     </div>
 </body>

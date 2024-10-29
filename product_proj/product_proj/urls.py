@@ -29,4 +29,5 @@ urlpatterns = [
     path('branch/', views.branch, name='branch'),
     path('settings/', views.settings, name='settings'),
     path('report/', views.report, name='report'),
+    path('notifications/', views.notifications, name='notifications'),
 ]

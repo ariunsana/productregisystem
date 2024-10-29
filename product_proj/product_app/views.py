@@ -19,3 +19,5 @@ def settings(request):
     return render(request, 'settings.html')
 def report(request):
     return render(request, 'report.html')
+def notifications(request):
+    return render(request, 'notifications.html')
