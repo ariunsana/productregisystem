@@ -40,19 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'back_app',
     'graphene_django',
-    'rest_framework',
-    'rest_framework_simplejwt',
+    'corsheaders'
 ]
 
 GRAPHENE = {
     'SCHEMA': 'back_app.schema.schema'
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'product_back.urls'
@@ -81,6 +76,13 @@ TEMPLATES = [
         },
     },
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://yourdomain.com",
+   ]
 
 WSGI_APPLICATION = 'product_back.wsgi.application'
 
