@@ -5,6 +5,7 @@ from .models import (
 )
 from graphql import GraphQLError
 from django.contrib.auth.hashers import make_password, check_password
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Define Types for all models
 class TurulType(DjangoObjectType):
@@ -57,6 +58,7 @@ class RegisterInput(graphene.InputObjectType):
     username = graphene.String(required=True)
     email = graphene.String(required=True)
     password = graphene.String(required=True)
+    confirm_password = graphene.String(required=True)
     role_name = graphene.String(required=True)
 
 
@@ -71,6 +73,7 @@ class UserType(graphene.ObjectType):
     username = graphene.String()
     email = graphene.String()
     role_name = graphene.String()
+    access_token = graphene.String()
 
 
 class UserRoleType(graphene.ObjectType):
@@ -92,6 +95,10 @@ class RegisterUser(graphene.Mutation):
             raise GraphQLError("Username already exists.")
         if Users.objects.filter(email=input.email).exists():
             raise GraphQLError("Email already exists.")
+
+        # Check if passwords match
+        if input.password != input.confirm_password:
+            raise GraphQLError("Passwords do not match.")
 
         # Fetch Role
         role = UserRole.objects.filter(role_name=input.role_name).first()
@@ -124,11 +131,16 @@ class LoginUser(graphene.Mutation):
         if not check_password(input.password, user.passwd):
             raise GraphQLError("Invalid username or password.")
 
+        # Generate JWT token
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
         return LoginUser(user=UserType(
             id=user.user_id,
             username=user.username,
             email=user.email,
-            role_name=user.role.role_name
+            role_name=user.role.role_name,
+            access_token=access_token
         ))
 
 
