@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block ss %}
 
+{% block ss %}
 {% include 'sidebar.html' %}
 
 <main class="col-span-full lg:col-start-2 row-start-2 p-8">
@@ -22,10 +22,10 @@
 
     <!-- Branches Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Branch Card 1 - Han-Uul -->
+        {% for branch in branches %}
         <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
             <div class="relative">
-                <img src="{% static 'images/khan-uul.png' %}" alt="Han-Uul Branch" class="w-full h-48 object-cover">
+                <img src="http://127.0.0.1:8080/media/{{ branch.img }}" alt="{{ branch.branchName }} Branch" class="w-full h-48 object-cover">
                 <div class="absolute top-0 right-0 p-2">
                     <button class="text-white hover:text-red-500">
                         <span class="material-icons-outlined">more_vert</span>
@@ -36,10 +36,10 @@
                 </div>
             </div>
             <div class="p-4">
-                <h3 class="text-lg font-semibold text-white mb-1">Хан-Уул салбар</h3>
+                <h3 class="text-lg font-semibold text-white mb-1">{{ branch.branchName }}</h3>
                 <div class="flex items-center text-gray-400 mb-3">
                     <span class="material-icons-outlined mr-2 text-sm">location_on</span>
-                    <p class="text-sm">Монгол улс, Улаанбаатар хот, Хан-Уул дүүрэг, 15-р хороо, Стадион Оргил (17011), Их монгол улсын гудамж 71, Имарт Хан-Уул салбар</p>
+                    <p class="text-sm">{{ branch.branchLocation }}</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -57,78 +57,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Branch Card 2 - Sansar -->
-        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
-            <div class="relative">
-                <img src="{% static 'images/sansar.png' %}" alt="Sansar Branch" class="w-full h-48 object-cover">
-                <div class="absolute top-0 right-0 p-2">
-                    <button class="text-white hover:text-red-500">
-                        <span class="material-icons-outlined">more_vert</span>
-                    </button>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <span class="px-2 py-1 bg-green-500 text-white text-sm rounded-full">Нээлттэй</span>
-                </div>
-            </div>
-            <div class="p-4">
-                <h3 class="text-lg font-semibold text-white mb-1">Сансар салбар</h3>
-                <div class="flex items-center text-gray-400 mb-3">
-                    <span class="material-icons-outlined mr-2 text-sm">location_on</span>
-                    <p class="text-sm">Монгол улс, Улаанбаатар хот, Баянзүрх дүүрэг, 1-р хороо, 12-р хороолол (13381), Токиогийн гудамж-23, Имарт Чингис</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <p class="text-sm text-gray-400">Ажилтан</p>
-                        <p class="text-lg font-semibold text-white">2</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-400">Борлуулалт</p>
-                        <p class="text-lg font-semibold text-green-500">₮1.8M</p>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between text-sm text-gray-400">
-                    <p>Ажиллах цаг: 09:00 - 20:30</p>
-                    <span class="material-icons-outlined text-blue-400 hover:text-blue-300 cursor-pointer">edit</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Branch Card 3 - 10th District -->
-        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
-            <div class="relative">
-                <img src="{% static 'images/10emart.png' %}" alt="10th District Branch" class="w-full h-48 object-cover">
-                <div class="absolute top-0 right-0 p-2">
-                    <button class="text-white hover:text-red-500">
-                        <span class="material-icons-outlined">more_vert</span>
-                    </button>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <span class="px-2 py-1 bg-yellow-500 text-white text-sm rounded-full">Засвартай</span>
-                </div>
-            </div>
-            <div class="p-4">
-                <h3 class="text-lg font-semibold text-white mb-1">10-р хороолол салбар</h3>
-                <div class="flex items-center text-gray-400 mb-3">
-                    <span class="material-icons-outlined mr-2 text-sm">location_on</span>
-                    <p class="text-sm">Улаанбаатар 16080, Баянгол дүүрэг 6-хороо, бигдүү хороолол 57/22-р</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <p class="text-sm text-gray-400">Ажилтан</p>
-                        <p class="text-lg font-semibold text-white">3</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-400">Борлуулалт</p>
-                        <p class="text-lg font-semibold text-green-500">₮2.1M</p>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between text-sm text-gray-400">
-                    <p>Ажиллах цаг: 09:00 - 20:30</p>
-                    <span class="material-icons-outlined text-blue-400 hover:text-blue-300 cursor-pointer">edit</span>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </main>
 
