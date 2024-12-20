@@ -1,5 +1,5 @@
 from django.db import models
-
+from slugify import slugify
 
 class Turul(models.Model):
     turul_id = models.AutoField(primary_key=True)
@@ -36,7 +36,10 @@ class Branch(models.Model):
     img = models.ImageField(upload_to='photos/branch', blank=True, null=True)
     slug = models.SlugField(max_length=100, unique=True, null=False)
     branch_location = models.TextField(blank=True, null=True)
-
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.branch_name)
+        super().save(*args, **kwargs)
     def __str__(self):
         return self.branch_name
 

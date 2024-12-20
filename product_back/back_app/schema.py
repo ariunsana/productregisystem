@@ -1,8 +1,7 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-from .models import (
-    Turul, Baraa, Branch, BranchBaraa, UserRole, Users, Worker, Sales, Supply
-)
+from .models import *
+from slugify import slugify
 from graphql import GraphQLError
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -309,15 +308,28 @@ class DeleteBaraa(graphene.Mutation):
 class CreateBranch(graphene.Mutation):
     class Arguments:
         branch_name = graphene.String(required=True)
-        slug = graphene.String(required=True)
         img = graphene.String()
         branch_location = graphene.String()
+        slug = graphene.String()  # Add slug here
 
     branch = graphene.Field(BranchType)
 
-    def mutate(self, info, branch_name, slug, img=None, branch_location=None):
-        branch = Branch(branch_name=branch_name, slug=slug, img=img, branch_location=branch_location)
+    def mutate(self, info, branch_name, img=None, branch_location=None, slug=None):
+        # Generate the slug from the branch_name if not provided
+        if not slug:
+            slug = slugify(branch_name)
+
+        # Create a new Branch instance with the slug and other fields
+        branch = Branch(
+            branch_name=branch_name,
+            img=img,
+            branch_location=branch_location,
+            slug=slug,  # Add slug here
+        )
+
+        # Save the branch to the database
         branch.save()
+
         return CreateBranch(branch=branch)
 
 class UpdateBranch(graphene.Mutation):
@@ -668,9 +680,14 @@ class Mutation(graphene.ObjectType):
     login_user = LoginUser.Field()
 
     # Include other mutations here (e.g., CRUD operations for other models)
-    # create_turul = CreateTurul.Field()
-    # update_turul = UpdateTurul.Field()
-    # delete_turul = DeleteTurul.Field()
+    create_turul = CreateTurul.Field()
+    update_turul = UpdateTurul.Field()
+    delete_turul = DeleteTurul.Field()
+
+    create_branch = CreateBranch.Field()
+    update_branch = UpdateBranch.Field()
+    delete_branch = DeleteBranch.Field()
+
     # ... other mutations ...
 
 # Create schema

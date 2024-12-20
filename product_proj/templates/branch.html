@@ -13,10 +13,12 @@
                 <input type="text" placeholder="Хайх..." class="w-full bg-secondary text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <span class="material-icons-outlined absolute left-3 top-2 text-gray-400">search</span>
             </div>
-            <button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2">
-                <span class="material-icons-outlined">add_location</span>
-                <span>Шинэ салбар</span>
-            </button>
+            <a href="{% url 'create_branch' %}" class="w-full sm:w-auto">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2">
+                    <span class="material-icons-outlined">add_location</span>
+                    <span>Шинэ салбар</span>
+                </button>
+            </a>
         </div>
     </div>
 

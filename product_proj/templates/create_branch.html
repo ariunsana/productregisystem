@@ -1,0 +1,119 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block ss %}
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Шинэ салбар нэмэх</h2>
+
+  <form
+    id="branchForm"
+    enctype="multipart/form-data"
+    method="POST"
+    action="{% url 'create_branch' %}"
+    class="bg-secondary p-6 rounded-lg shadow-lg max-w-lg"
+  >
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="branchName" class="block text-gray-400 mb-2"
+        >Салбарын нэр</label
+      >
+      <input
+        type="text"
+        id="branchName"
+        name="branchName"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+      <div class="mb-4">
+        <label for="img" class="block text-gray-400 mb-2">Зураг</label>
+        <input
+          type="file"
+          id="img"
+          name="img"
+          class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+    <div class="mb-4">
+      <label for="branchLocation" class="block text-gray-400 mb-2"
+        >Байршил</label
+      >
+      <input
+        type="text"
+        id="branchLocation"
+        name="branchLocation"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center justify-center space-x-2"
+      >
+        <span class="material-icons-outlined">add</span>
+        <span>Нэмэх</span>
+      </button>
+    </div>
+  </form>
+</main>
+<script>
+    document.getElementById("branchForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+  
+      var csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+      var formData = new FormData(event.target); // Use FormData to include the file in the request
+  
+      // Prepare the GraphQL mutation
+      var mutation = `
+        mutation CreateBranch($branchName: String!, $img: String, $branchLocation: String) {
+          createBranch(branchName: $branchName, img: $img, branchLocation: $branchLocation) {
+            branch {
+              branchId
+              branchName
+              branchLocation
+              img
+              slug
+            }
+          }
+        }
+      `;
+      
+      // Create a variables object, include form data for mutation variables
+      var variables = {
+      branchName: formData.get("branchName"),
+      branchLocation: formData.get("branchLocation"),
+      img: formData.get("img") ? formData.get("img").name : null // You can send an image URL or base64 if needed
+    };
+
+    // Prepare the request payload
+    var payload = {
+      query: mutation,
+      variables: variables
+    };
+
+    // Send the request to the GraphQL endpoint
+    fetch("http://localhost:8080/graphql/", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+        "Content-Type": "application/json", // Send as JSON
+      },
+      body: JSON.stringify(payload) // Convert the GraphQL request payload to JSON format
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+      // You can handle the response data here (e.g., show a success message or update UI)
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  });
+</script>  
+
+{% endblock %}
