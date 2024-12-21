@@ -2,9 +2,15 @@ import graphene
 from graphene_django.types import DjangoObjectType
 from .models import *
 from slugify import slugify
+import base64
 from graphql import GraphQLError
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils.text import slugify
+from django.core.files.base import ContentFile
+from django.conf import settings
+from graphene import Mutation, Field, String
+import os
 
 # Define Types for all models
 class TurulType(DjangoObjectType):
@@ -305,32 +311,60 @@ class DeleteBaraa(graphene.Mutation):
 # Repeat similar patterns for Branch, BranchBaraa, UserRole, Users, Worker, Sales, Supply
 
 # Example for Branch
-class CreateBranch(graphene.Mutation):
+
+
+class BranchType(graphene.ObjectType):
+    branch_id = graphene.Int()
+    branch_name = graphene.String()
+    img = graphene.String()
+    slug = graphene.String()
+    branch_location = graphene.String()
+
+
+class CreateBranch(Mutation):
     class Arguments:
-        branch_name = graphene.String(required=True)
-        img = graphene.String()
-        branch_location = graphene.String()
-        slug = graphene.String()  # Add slug here
+        branch_name = String(required=True)
+        img = String()  # Base64-encoded image
+        branch_location = String()
 
-    branch = graphene.Field(BranchType)
+    branch = Field(lambda: BranchType)
 
-    def mutate(self, info, branch_name, img=None, branch_location=None, slug=None):
-        # Generate the slug from the branch_name if not provided
-        if not slug:
-            slug = slugify(branch_name)
+    def mutate(self, info, branch_name, img=None, branch_location=None):
+        # Generate the slug from the branch_name
+        slug = slugify(branch_name)
 
-        # Create a new Branch instance with the slug and other fields
+        # Prepare the image file if provided
+        image_path = None
+        if img:
+            try:
+                # Decode the Base64 image
+                decoded_image = base64.b64decode(img)
+            except (TypeError, ValueError):
+                raise ValueError("Invalid Base64-encoded image.")
+
+            # Define the image directory and file path
+            image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "branch")
+            os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
+            image_filename = f"{slug}_branch.jpg"
+            image_path = os.path.join(image_dir, image_filename)
+
+            # Save the image to the local file system
+            with open(image_path, "wb") as image_file:
+                image_file.write(decoded_image)
+
+        # Create a new Branch instance
         branch = Branch(
             branch_name=branch_name,
-            img=img,
+            img=f"photos/branch/{os.path.basename(image_path)}" if image_path else None,
             branch_location=branch_location,
-            slug=slug,  # Add slug here
+            slug=slug,
         )
 
         # Save the branch to the database
         branch.save()
 
         return CreateBranch(branch=branch)
+
 
 class UpdateBranch(graphene.Mutation):
     class Arguments:

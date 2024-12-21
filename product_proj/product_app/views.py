@@ -2,6 +2,8 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 import requests
+from django.shortcuts import get_object_or_404
+
 GRAPHQL_ENDPOINT = 'http://localhost:8080/graphql/'
 # Function to send GraphQL requests
 
@@ -116,6 +118,7 @@ def create_branch(request):
             return render(request, 'create_branch.html', {'error': 'Failed to create branch'})
 
     return render(request, 'create_branch.html')
+
 def update_branch(request, branch_id):
     if request.method == "POST":
         branch_name = request.POST.get("branch_name")
