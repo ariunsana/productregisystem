@@ -7,127 +7,128 @@
   <h2 class="text-2xl font-bold text-white mb-4">Шинэ салбар нэмэх</h2>
 
   <form
-  id="branchForm"
-  enctype="multipart/form-data"
-  method="POST"
-  action="{% url 'create_branch' %}"
-  class="bg-secondary p-6 rounded-lg shadow-lg max-w-lg"
->
-  {% csrf_token %}
-  <div class="mb-4">
-    <label for="branchName" class="block text-gray-400 mb-2">Салбарын нэр</label>
-    <input
-      type="text"
-      id="branchName"
-      name="branchName"
-      required
-      class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
-  </div>
+    id="branchForm"
+    enctype="multipart/form-data"
+    method="POST"
+    action="{% url 'create_branch' %}"
+    class="bg-secondary p-6 rounded-lg shadow-lg max-w-lg"
+  >
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="branchName" class="block text-gray-400 mb-2">Салбарын нэр</label>
+      <input
+        type="text"
+        id="branchName"
+        name="branchName"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
 
-  <div class="mb-4">
-    <label for="img" class="block text-gray-400 mb-2">Зураг</label>
-    <input
-      type="file"
-      id="img"
-      name="img"
-      class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
-  </div>
+    <div class="mb-4">
+      <label for="img" class="block text-gray-400 mb-2">Зураг</label>
+      <input
+        type="file"
+        id="img"
+        name="img"
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
 
-  <div class="mb-4">
-    <label for="branchLocation" class="block text-gray-400 mb-2">Байршил</label>
-    <input
-      type="text"
-      id="branchLocation"
-      name="branchLocation"
-      required
-      class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
-  </div>
+    <div class="mb-4">
+      <label for="branchLocation" class="block text-gray-400 mb-2">Байршил</label>
+      <input
+        type="text"
+        id="branchLocation"
+        name="branchLocation"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
 
-  <div class="flex justify-end">
-    <button
-      type="submit"
-      class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center justify-center space-x-2"
-    >
-      <span class="material-icons-outlined">add</span>
-      <span>Нэмэх</span>
-    </button>
-  </div>
-</form>
-
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center justify-center space-x-2"
+      >
+        <span class="material-icons-outlined">add</span>
+        <span>Нэмэх</span>
+      </button>
+    </div>
+  </form>
 </main>
+
 <script>
-    document.getElementById("branchForm").addEventListener("submit", async function (event) {
-  event.preventDefault();
+  document.getElementById("branchForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-  const formData = new FormData(event.target);
+    const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+    const formData = new FormData(event.target);
 
-  // Convert the image file to Base64
-  const file = formData.get("img");
-  let base64Image = null;
-  if (file) {
-    base64Image = await toBase64(file);
-  }
+    // Convert the image file to Base64
+    const file = formData.get("img");
+    let base64Image = null;
+    if (file) {
+      base64Image = await toBase64(file);
+    }
 
-  // Prepare the GraphQL mutation
-  const mutation = `
-    mutation CreateBranch($branchName: String!, $img: String, $branchLocation: String) {
-      createBranch(branchName: $branchName, img: $img, branchLocation: $branchLocation) {
-        branch {
-          branchId
-          branchName
-          branchLocation
-          img
-          slug
+    // Prepare the GraphQL mutation
+    const mutation = `
+      mutation CreateBranch($branchName: String!, $img: String, $branchLocation: String) {
+        createBranch(branchName: $branchName, img: $img, branchLocation: $branchLocation) {
+          branch {
+            branchId
+            branchName
+            branchLocation
+            img
+            slug
+          }
         }
       }
-    }
-  `;
+    `;
 
-  // Create a variables object
-  const variables = {
-    branchName: formData.get("branchName"),
-    branchLocation: formData.get("branchLocation"),
-    img: base64Image, // Include the Base64-encoded image
-  };
+    // Create a variables object
+    const variables = {
+      branchName: formData.get("branchName"),
+      branchLocation: formData.get("branchLocation"),
+      img: base64Image, // Include the Base64-encoded image
+    };
 
-  // Prepare the request payload
-  const payload = {
-    query: mutation,
-    variables: variables,
-  };
+    // Prepare the request payload
+    const payload = {
+      query: mutation,
+      variables: variables,
+    };
 
-  // Send the request to the GraphQL endpoint
-  fetch("http://localhost:8080/graphql/", {
-    method: "POST",
-    headers: {
-      "X-CSRFToken": csrftoken,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Success:", data);
-      // Handle success (e.g., redirect or display success message)
+    // Send the request to the GraphQL endpoint
+    fetch("http://localhost:8080/graphql/", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-});
-
-// Helper function to convert file to Base64
-function toBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result.split(",")[1]); // Get the Base64 part
-    reader.onerror = (error) => reject(error);
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        // Redirect to the branch list page after success
+        window.location.href = "{% url 'branch_list' %}";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   });
-}
+
+  // Helper function to convert file to Base64
+  function toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(",")[1]); // Get the Base64 part
+      reader.onerror = (error) => reject(error);
+    });
+  }
 </script>  
 
 {% endblock %}

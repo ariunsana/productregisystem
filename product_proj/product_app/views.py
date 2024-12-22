@@ -41,6 +41,39 @@ def fetch_data(query):
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return None
+    
+def fetch_branch_by_id(branch_id):
+    """
+    Fetch branch details by branch_id using a GraphQL query.
+    """
+    query = """
+    query FetchBranchById($branchId: Int!) {
+        branches(branchId: $branchId) {
+            branchId
+            branchName
+            slug
+            img
+            branchLocation
+        }
+    }
+    """
+    variables = {"branchId": branch_id}
+    response = requests.post(
+        GRAPHQL_ENDPOINT,
+        json={"query": query, "variables": variables},
+        headers={"Content-Type": "application/json"}
+    )
+    
+    if response.status_code == 200:
+        data = response.json()
+        if "errors" in data:
+            raise Exception(f"GraphQL errors: {data['errors']}")
+        # If `branches` is a list, return the first item or handle appropriately
+        branches = data.get("data", {}).get("branches", [])
+        return branches[0] if branches else None
+    else:
+        raise Exception(f"Failed to fetch branch. Status code: {response.status_code}, Response: {response.text}")
+
 
 def branch_list(request):
     query = """
@@ -57,11 +90,11 @@ def branch_list(request):
     
     if data and 'data' in data and 'branches' in data['data']:
         branch_data = data['data']['branches']
+        print(branch_data)  # Debugging line to check the structure
     else:
         branch_data = []  # Default to empty list if no data
 
     return render(request, 'branch.html', {'branches': branch_data})
-
 
 def create_branch(request):
     if request.method == "POST":
@@ -120,50 +153,61 @@ def create_branch(request):
     return render(request, 'create_branch.html')
 
 def update_branch(request, branch_id):
+
+    branch = fetch_branch_by_id(branch_id)  # Fetch the branch data to prepopulate the form
+    
     if request.method == "POST":
-        branch_name = request.POST.get("branch_name")
-        slug = request.POST.get("slug")
-        img = request.POST.get("img")
-        branch_location = request.POST.get("branch_location")
+        branch_name = request.POST.get("branchName")
+        branch_location = request.POST.get("branchLocation")
+        img = request.FILES.get("img")  # Access the uploaded image file
+
+        # If the image is provided, save it to the filesystem
+        if img:
+            img_path = default_storage.save('photos/branch/' + img.name, ContentFile(img.read()))
+            img_url = default_storage.url(img_path)  # Get the URL of the image
+        else:
+            img_url = None  # If no image is uploaded, set to None
 
         mutation = """
-        mutation UpdateBranch($branchId: Int!, $branchName: String, $slug: String, $img: String, $branchLocation: String) {
-          updateBranch(branchId: $branchId, branchName: $branchName, slug: $slug, img: $img, branchLocation: $branchLocation) {
-            branch {
-              branchId
-              branchName
-              branchLocation
-              img
+        mutation UpdateBranch($branchId: Int!, $branchName: String, $img: String, $branchLocation: String) {
+            updateBranch(branchId: $branchId, branchName: $branchName, img: $img, branchLocation: $branchLocation) {
+                branch {
+                    branchId
+                    branchName
+                    slug
+                    img
+                    branchLocation
+                }
             }
-          }
         }
         """
         variables = {
             "branchId": branch_id,
             "branchName": branch_name,
-            "slug": slug,
-            "img": img,
-            "branchLocation": branch_location
+            "img": img_url,
+            "branchLocation": branch_location,
         }
-        fetch_mutation_data(mutation, variables)
-        return redirect('branch_list')  # Redirect to the branch list after updating
 
-    # Fetch the current branch data to pre-fill the form
-    query = """
-    query GetBranch($branchId: Int!) {
-      branch(branchId: $branchId) {
-        branchId
-        branchName
-        branchLocation
-        img
-      }
-    }
-    """
-    variables = {"branchId": branch_id}
-    data = fetch_mutation_data(query, variables)
-    branch_data = data.get('data', {}).get('branch', {})
-    
-    return render(request, 'update_branch.html', {'branch': branch_data})  # Render a form for updating a branch
+        response_data = fetch_mutation_data(mutation, variables)
+
+        if response_data is None:
+            print("Error: No valid response from the server.")
+            return render(request, 'update_branch.html', {'error': 'Failed to update branch'})
+
+        if 'errors' in response_data:
+            print(f"GraphQL errors: {response_data['errors']}")
+            return render(request, 'update_branch.html', {'error': response_data['errors'][0]['message']})
+
+        if 'data' in response_data and 'updateBranch' in response_data['data']:
+            updated_branch = response_data['data']['updateBranch']['branch']
+            print(f"Updated Branch: {updated_branch}")
+            return redirect('branch_list')
+
+        else:
+            print("Error: No branch data returned from GraphQL.")
+            return render(request, 'update_branch.html', {'error': 'Failed to update branch'})
+
+    return render(request, 'update_branch.html', {'branch': branch})
 
 def delete_branch(request, branch_id):
     if request.method == "POST":

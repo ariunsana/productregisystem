@@ -28,10 +28,26 @@
         <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
             <div class="relative">
                 <img src="http://127.0.0.1:8080/media/{{ branch.img }}" alt="{{ branch.branchName }} Branch" class="w-full h-48 object-cover">
-                <div class="absolute top-0 right-0 p-2">
+                <div class="absolute top-0 right-0 p-2 group">
                     <button class="text-white hover:text-red-500">
                         <span class="material-icons-outlined">more_vert</span>
                     </button>
+                    <!-- Dropdown menu -->
+                    <div class="hidden group-hover:block absolute right-0 bg-secondary rounded-lg shadow-lg mt-2 w-32">
+                        <a href="{% url 'update_branch' branch.branchId %}" class="block px-4 py-2 text-white hover:bg-blue-600">
+                            <span class="material-icons-outlined text-sm mr-2">edit</span>
+                            Засах
+                        </a>
+                        <form method="POST" action="{% url 'delete_branch' branch.branchId %}" onsubmit="return confirm('Та энэ салбарыг устгахад итгэлтэй байна уу?');">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full text-left px-4 py-2 text-white hover:bg-red-600">
+                              <span class="material-icons-outlined text-sm mr-2">delete</span>
+                              Устгах
+                            </button>
+                          </form>
+                          
+                        </form>
+                    </div>
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                     <span class="px-2 py-1 bg-green-500 text-white text-sm rounded-full">Нээлттэй</span>
@@ -55,7 +71,6 @@
                 </div>
                 <div class="flex items-center justify-between text-sm text-gray-400">
                     <p>Ажиллах цаг: 10:00 - 20:00</p>
-                    <span class="material-icons-outlined text-blue-400 hover:text-blue-300 cursor-pointer">edit</span>
                 </div>
             </div>
         </div>
