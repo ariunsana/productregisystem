@@ -1,4 +1,5 @@
 from django.core.files.storage import default_storage
+import base64
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 import requests
@@ -94,80 +95,72 @@ def branch_list(request):
     else:
         branch_data = []  # Default to empty list if no data
 
-    return render(request, 'branch.html', {'branches': branch_data})
+    return render(request, 'branch/branch.html', {'branches': branch_data})
 
 def create_branch(request):
     if request.method == "POST":
         branch_name = request.POST.get("branchName")
         branch_location = request.POST.get("branchLocation")
-        img = request.FILES.get("img")  # Access the uploaded image file
+        img = request.FILES.get("img")
 
-        # If the image is provided, save it to the filesystem
+        # Convert image to base64 if provided
+        base64_img = None
         if img:
-            img_path = default_storage.save('photos/branch/' + img.name, ContentFile(img.read()))
-            img_url = default_storage.url(img_path)  # Get the URL of the image
-        else:
-            img_url = None  # If no image is uploaded, set to None
-
-        slug = request.POST.get("slug")
+            file_content = img.read()
+            base64_img = base64.b64encode(file_content).decode('utf-8')
 
         mutation = """
         mutation CreateBranch($branchName: String!, $img: String, $branchLocation: String) {
             createBranch(branchName: $branchName, img: $img, branchLocation: $branchLocation) {
-              branch {
-                branchId
-                branchName
-                branchLocation
-                img
-                slug
-              }
+                branch {
+                    branchId
+                    branchName
+                    branchLocation
+                    img
+                    slug
+                }
             }
         }
         """
+        
         variables = {
             "branchName": branch_name,
-            "img": img_url,  # Pass the image file path
+            "img": base64_img,  # Send base64 encoded image
             "branchLocation": branch_location,
-            "slug": slug
         }
 
         response_data = fetch_mutation_data(mutation, variables)
 
         if response_data is None:
-            print("Error: No valid response from the server.")
             return render(request, 'create_branch.html', {'error': 'Failed to create branch'})
 
         if 'errors' in response_data:
-            print(f"GraphQL errors: {response_data['errors']}")
             return render(request, 'create_branch.html', {'error': response_data['errors'][0]['message']})
 
         if 'data' in response_data and 'createBranch' in response_data['data']:
-            created_branch = response_data['data']['createBranch']['branch']
-            print(f"Created Branch: {created_branch}")
             return redirect('branch_list')
-
         else:
-            print("Error: No branch data returned from GraphQL.")
             return render(request, 'create_branch.html', {'error': 'Failed to create branch'})
 
-    return render(request, 'create_branch.html')
+    return render(request, 'branch/create_branch.html')
+
 
 def update_branch(request, branch_id):
-
-    branch = fetch_branch_by_id(branch_id)  # Fetch the branch data to prepopulate the form
+    # Fetch the branch data to prepopulate the form
+    branch = fetch_branch_by_id(branch_id)
     
     if request.method == "POST":
         branch_name = request.POST.get("branchName")
         branch_location = request.POST.get("branchLocation")
         img = request.FILES.get("img")  # Access the uploaded image file
 
-        # If the image is provided, save it to the filesystem
+        # Convert the image file to a Base64-encoded string if provided
+        base64_img = None
         if img:
-            img_path = default_storage.save('photos/branch/' + img.name, ContentFile(img.read()))
-            img_url = default_storage.url(img_path)  # Get the URL of the image
-        else:
-            img_url = None  # If no image is uploaded, set to None
+            file_content = img.read()  # Read the file content
+            base64_img = base64.b64encode(file_content).decode('utf-8')  # Encode to Base64
 
+        # Prepare the GraphQL mutation and variables
         mutation = """
         mutation UpdateBranch($branchId: Int!, $branchName: String, $img: String, $branchLocation: String) {
             updateBranch(branchId: $branchId, branchName: $branchName, img: $img, branchLocation: $branchLocation) {
@@ -184,10 +177,11 @@ def update_branch(request, branch_id):
         variables = {
             "branchId": branch_id,
             "branchName": branch_name,
-            "img": img_url,
+            "img": base64_img,  # Include the Base64-encoded image
             "branchLocation": branch_location,
         }
 
+        # Fetch mutation response
         response_data = fetch_mutation_data(mutation, variables)
 
         if response_data is None:
@@ -207,7 +201,8 @@ def update_branch(request, branch_id):
             print("Error: No branch data returned from GraphQL.")
             return render(request, 'update_branch.html', {'error': 'Failed to update branch'})
 
-    return render(request, 'update_branch.html', {'branch': branch})
+    return render(request, 'branch/update_branch.html', {'branch': branch})
+
 
 def delete_branch(request, branch_id):
     if request.method == "POST":
@@ -222,7 +217,7 @@ def delete_branch(request, branch_id):
         fetch_mutation_data(mutation, variables)
         return redirect('branch_list')  # Redirect to the branch list after deletion
 
-    return render(request, 'delete_branch.html', {'branch_id': branch_id})  # Render a confirmation page for deletion
+    return render(request, 'branch/delete_branch.html', {'branch_id': branch_id})  # Render a confirmation page for deletion
 
 def index(request):
     return render(request, 'index.html')

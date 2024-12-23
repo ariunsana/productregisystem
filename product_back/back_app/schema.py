@@ -154,7 +154,7 @@ class Query(graphene.ObjectType):
     # Query all models
     turuls = graphene.List(TurulType)
     baraas = graphene.List(BaraaType)
-    branches = graphene.List(BranchType)
+    branches = graphene.List(BranchType, branch_id=graphene.Int())
     branch_baraas = graphene.List(BranchBaraaType)
     user_roles = graphene.List(UserRoleType)
     users = graphene.List(UsersType)
@@ -169,8 +169,13 @@ class Query(graphene.ObjectType):
     def resolve_baraas(self, info, **kwargs):
         return Baraa.objects.all()
 
-    def resolve_branches(self, info, **kwargs):
-        return Branch.objects.all()
+    def resolve_branches(self, info, branch_id=None, **kwargs):
+        if branch_id:
+            # If branch_id is provided, filter by branch_id
+            return Branch.objects.filter(pk=branch_id)
+        else:
+            # Otherwise, return all branches
+            return Branch.objects.all()
 
     def resolve_branch_baraas(self, info, **kwargs):
         return BranchBaraa.objects.all()
@@ -308,11 +313,7 @@ class DeleteBaraa(graphene.Mutation):
         baraa.delete()
         return DeleteBaraa(success=True)
 
-# Repeat similar patterns for Branch, BranchBaraa, UserRole, Users, Worker, Sales, Supply
-
 # Example for Branch
-
-
 class BranchType(graphene.ObjectType):
     branch_id = graphene.Int()
     branch_name = graphene.String()
@@ -345,7 +346,7 @@ class CreateBranch(Mutation):
             # Define the image directory and file path
             image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "branch")
             os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
-            image_filename = f"{slug}_branch.jpg"
+            image_filename = f"{branch_name}_branch.jpg"
             image_path = os.path.join(image_dir, image_filename)
 
             # Save the image to the local file system
@@ -365,29 +366,57 @@ class CreateBranch(Mutation):
 
         return CreateBranch(branch=branch)
 
-
-class UpdateBranch(graphene.Mutation):
+class UpdateBranch(Mutation):
     class Arguments:
-        branch_id = graphene.Int(required=True)
-        branch_name = graphene.String()
-        slug = graphene.String()
-        img = graphene.String()
-        branch_location = graphene.String()
+        branch_id = graphene.Int(required=True)  # The ID of the branch to update
+        branch_name = graphene.String()  # Optional field for updating the name
+        img = graphene.String()  # Optional Base64-encoded image
+        branch_location = graphene.String()  # Optional field for updating location
 
-    branch = graphene.Field(BranchType)
+    branch = Field(lambda: BranchType)
 
-    def mutate(self, info, branch_id, branch_name=None, slug=None, img=None, branch_location=None):
-        branch = Branch.objects.get(pk=branch_id)
+    def mutate(self, info, branch_id, branch_name=None, img=None, branch_location=None):
+        # Fetch the branch instance to update
+        try:
+            branch = Branch.objects.get(pk=branch_id)
+        except Branch.DoesNotExist:
+            raise ValueError("Branch with the given ID does not exist.")
+
+        # Update branch_name and slug if branch_name is provided
         if branch_name:
             branch.branch_name = branch_name
-        if slug:
-            branch.slug = slug
+            branch.slug = slugify(branch_name)  # Generate a new slug
+
+        # Update img if provided
         if img:
-            branch.img = img
+            try:
+                # Decode the Base64 image
+                decoded_image = base64.b64decode(img)
+            except (TypeError, ValueError):
+                raise ValueError("Invalid Base64-encoded image.")
+
+            # Define the image directory and file path
+            image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "branch")
+            os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
+            image_filename = f"{branch.slug}_branch.jpg"  # Use slug for the image filename
+            image_path = os.path.join(image_dir, image_filename)
+
+            # Save the new image to the local file system
+            with open(image_path, "wb") as image_file:
+                image_file.write(decoded_image)
+
+            # Update the image path in the branch instance
+            branch.img = f"photos/branch/{os.path.basename(image_path)}"
+
+        # Update branch_location if provided
         if branch_location:
             branch.branch_location = branch_location
+
+        # Save the updated branch instance
         branch.save()
+
         return UpdateBranch(branch=branch)
+
 
 class DeleteBranch(graphene.Mutation):
     class Arguments:
