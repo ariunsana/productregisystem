@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% load static %} {% block ss %} 
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Шинэ төрөл нэмэх</h2>
+
+  <form
+    id="createturulForm"
+    method="POST"
+    action="{% url 'create_turul' %}"
+    enctype="multipart/form-data"
+    class="bg-secondary p-6 rounded-lg shadow-lg max-w-lg"
+  >
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="turulName" class="block text-gray-400 mb-2"
+        >Төрлийн нэр</label
+      >
+      <input
+        type="text"
+        id="turulName"
+        name="turulName"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+    <div class="mb-4">
+      <label for="img" class="block text-gray-400 mb-2">Зураг</label>
+      <input
+        type="file"
+        id="img"
+        name="img"
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="description" class="block text-gray-400 mb-2">Тайлбар</label>
+      <input
+        type="text"
+        id="description"
+        name="description"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center justify-center space-x-2"
+      >
+        <span class="material-icons-outlined">add</span>
+        <span>Нэмэх</span>
+      </button>
+    </div>
+  </form>
+</main>
+{% endblock %}

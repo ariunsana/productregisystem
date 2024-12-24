@@ -24,12 +24,21 @@ urlpatterns = [
     path('', views.signin, name='signin'),
     path('register/', views.register, name='register'),
     path('products/', views.products, name='products'),
-    path('category/', views.category, name='category'),
-    path('seller/', views.seller, name='seller'),
+    # branch
     path('branch_list/', views.branch_list, name='branch_list'),
     path('branch/create/', views.create_branch, name='create_branch'),
     path('update/<int:branch_id>/', views.update_branch, name='update_branch'),
-    path('delete/<int:branch_id>/', views.delete_branch, name='delete_branch'),  # Fix here
+    path('delete/<int:branch_id>/', views.delete_branch, name='delete_branch'), 
+    # turul
+    path('turul_list/', views.turul_list, name='turul_list'), 
+    path('turul/create/', views.create_turul, name='create_turul'),
+    path('turul/update/<int:turul_id>/', views.update_turul, name='update_turul'),
+    path('turul/delete/<int:turul_id>/', views.delete_turul, name='delete_turul'),
+    # worker
+    path('worker_list/', views.worker_list, name='worker_list'),  # List all workers
+    path('worker/create/', views.create_worker, name='create_worker'),  # Create a new worker
+    path('worker/update/<int:worker_id>/', views.update_worker, name='update_worker'),
+    path('worker/delete/<int:worker_id>/', views.delete_worker, name='delete_worker'),  # Delete a specific worker
     path('settings/', views.settings, name='settings'),
     path('report/', views.report, name='report'),
     path('notifications/', views.notifications, name='notifications'),

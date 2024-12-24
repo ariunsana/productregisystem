@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ss %}
+
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white mb-4">Бүтээгдэхүүний ангилал</h2>
+        <div class="flex justify-between items-center mb-6">
+            <div class="relative">
+                <input type="text" placeholder="Хайх..." class="bg-secondary text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <span class="material-icons-outlined absolute left-3 top-2 text-gray-400">search</span>
+            </div>
+            <a href="{% url 'create_turul' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                <span class="material-icons-outlined">add</span>
+                <span>Шинэ төрөл нэмэх</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for turul in turuls %}
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="relative h-48">
+                <img src="http://127.0.0.1:8080/media/{{ turul.img }}" alt="{{ turul.turulName }}" class="w-full h-full object-cover">
+                <div class="absolute top-0 right-0 p-2">
+                    <button class="text-white hover:text-red-500">
+                        <span class="material-icons-outlined">more_vert</span>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">{{ turul.turulName }}</h3>
+                <div class="flex justify-between items-center text-gray-400">
+                    <span>Нийт: {{ turul.itemCount }} бараа</span>
+                    <span class="material-icons-outlined">chevron_right</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+{% endblock %}

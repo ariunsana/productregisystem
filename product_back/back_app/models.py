@@ -11,7 +11,6 @@ class Turul(models.Model):
     def __str__(self):
         return self.turul_name
 
-
 class Baraa(models.Model):
     baraa_id = models.AutoField(primary_key=True)
     baraa_name = models.CharField(max_length=100, null=False)
@@ -95,11 +94,13 @@ class Worker(models.Model):
     slug = models.SlugField(max_length=100, unique=True, null=False)
     start_date = models.DateField(auto_now_add=True)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=False)
-    user = models.OneToOneField(Users, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
-
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.firstname)
+        super().save(*args, **kwargs)
 
 class Sales(models.Model):
     sales_id = models.AutoField(primary_key=True)

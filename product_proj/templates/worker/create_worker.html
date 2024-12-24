@@ -1,0 +1,135 @@
+{% extends 'base.html' %} {% load static %} {% block ss %} 
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Шинэ ажилтан нэмэх</h2>
+
+  <form
+    method="POST"
+    action="{% url 'create_worker' %}"
+    enctype="multipart/form-data"
+    class="bg-secondary p-6 rounded-lg shadow-lg max-w-lg"
+  >
+    {% csrf_token %}
+
+    <div class="mb-4">
+      <label for="firstname" class="block text-gray-400 mb-2">Нэр</label>
+      <input
+        type="text"
+        id="firstname"
+        name="firstname"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="lastname" class="block text-gray-400 mb-2">Овог</label>
+      <input
+        type="text"
+        id="lastname"
+        name="lastname"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="age" class="block text-gray-400 mb-2">Нас</label>
+      <input
+        type="text"
+        id="age"
+        name="age"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="img" class="block text-gray-400 mb-2">Зураг</label>
+      <input
+        type="file"
+        id="img"
+        name="img"
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="position" class="block text-gray-400 mb-2"
+        >Албан тушаал</label
+      >
+      <input
+        type="text"
+        id="position"
+        name="position"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="salary" class="block text-gray-400 mb-2">Цалин</label>
+      <input
+        type="number"
+        id="salary"
+        name="salary"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="branch_id" class="block text-gray-400 mb-2">Салбар</label>
+      <select
+        id="branch_id"
+        name="branch_id"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
+        <option value="">Салбар сонгох</option>
+        {% for branch in branches %}
+        <option value="{{ branch.branchId }}">{{ branch.branchName }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- New fields for geriinhayg (address) and utasdugaar (phone number) -->
+    <div class="mb-4">
+      <label for="geriinhayg" class="block text-gray-400 mb-2"
+        >Гэрийн хаяг</label
+      >
+      <input
+        type="text"
+        id="geriinhayg"
+        name="geriinhayg"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="utasdugaar" class="block text-gray-400 mb-2"
+        >Утас дугаар</label
+      >
+      <input
+        type="text"
+        id="utasdugaar"
+        name="utasdugaar"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center justify-center space-x-2"
+      >
+        <span class="material-icons-outlined">add</span>
+        <span>Нэмэх</span>
+      </button>
+    </div>
+  </form>
+</main>
+{% endblock %}

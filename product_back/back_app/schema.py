@@ -7,7 +7,6 @@ from graphql import GraphQLError
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.text import slugify
-from django.core.files.base import ContentFile
 from django.conf import settings
 from graphene import Mutation, Field, String
 import os
@@ -16,47 +15,30 @@ import os
 class TurulType(DjangoObjectType):
     class Meta:
         model = Turul
-
-
 class BaraaType(DjangoObjectType):
     class Meta:
         model = Baraa
-
-
 class BranchType(DjangoObjectType):
     class Meta:
         model = Branch
-
-
 class BranchBaraaType(DjangoObjectType):
     class Meta:
         model = BranchBaraa
-
-
 class UserRoleType(DjangoObjectType):
     class Meta:
         model = UserRole
-
-
 class UsersType(DjangoObjectType):
     class Meta:
         model = Users
-
-
 class WorkerType(DjangoObjectType):
     class Meta:
         model = Worker
-
-
 class SalesType(DjangoObjectType):
     class Meta:
         model = Sales
-
-
 class SupplyType(DjangoObjectType):
     class Meta:
         model = Supply
-
 
 # Input Types for Registration and Login
 class RegisterInput(graphene.InputObjectType):
@@ -65,21 +47,31 @@ class RegisterInput(graphene.InputObjectType):
     password = graphene.String(required=True)
     confirm_password = graphene.String(required=True)
     role_name = graphene.String(required=True)
-
-
 class LoginInput(graphene.InputObjectType):
     username = graphene.String(required=True)
     password = graphene.String(required=True)
 
-
 # Types
+class BranchType(graphene.ObjectType):
+    branch_id = graphene.Int()
+    branch_name = graphene.String()
+    img = graphene.String()
+    slug = graphene.String()
+    branch_location = graphene.String()
+
+class TurulType(graphene.ObjectType):
+    turul_id = graphene.Int()
+    turul_name = graphene.String()
+    img = graphene.String()
+    slug = graphene.String()
+    description = graphene.String()
+
 class UserType(graphene.ObjectType):
     id = graphene.ID()
     username = graphene.String()
     email = graphene.String()
     role_name = graphene.String()
     access_token = graphene.String()
-
 
 class UserRoleType(graphene.ObjectType):
     role_id = graphene.ID()
@@ -148,23 +140,37 @@ class LoginUser(graphene.Mutation):
             access_token=access_token
         ))
 
-
 # Define Query for all models
 class Query(graphene.ObjectType):
     # Query all models
-    turuls = graphene.List(TurulType)
+    turuls = graphene.List(TurulType, turul_id=graphene.Int())
     baraas = graphene.List(BaraaType)
     branches = graphene.List(BranchType, branch_id=graphene.Int())
     branch_baraas = graphene.List(BranchBaraaType)
     user_roles = graphene.List(UserRoleType)
     users = graphene.List(UsersType)
-    workers = graphene.List(WorkerType)
     sales = graphene.List(SalesType)
     supplies = graphene.List(SupplyType)
+    workers = graphene.List(WorkerType)
+    worker = graphene.Field(WorkerType, worker_id=graphene.Int())
+
+    def resolve_workers(self, info, **kwargs):
+        return Worker.objects.all()
+
+    def resolve_worker(self, info, worker_id, **kwargs):
+        try:
+            return Worker.objects.get(pk=worker_id)
+        except Worker.DoesNotExist:
+            return None
 
     # Define resolvers
-    def resolve_turuls(self, info, **kwargs):
-        return Turul.objects.all()
+    def resolve_turuls(self, info, turul_id=None, **kwargs):
+        if turul_id:
+            # If turul_id is provided, filter by turul_id
+            return Turul.objects.filter(pk=turul_id)
+        else:
+            # Otherwise, return all turuls
+            return Turul.objects.all()
 
     def resolve_baraas(self, info, **kwargs):
         return Baraa.objects.all()
@@ -176,7 +182,7 @@ class Query(graphene.ObjectType):
         else:
             # Otherwise, return all branches
             return Branch.objects.all()
-
+        
     def resolve_branch_baraas(self, info, **kwargs):
         return BranchBaraa.objects.all()
 
@@ -186,55 +192,104 @@ class Query(graphene.ObjectType):
     def resolve_users(self, info, **kwargs):
         return Users.objects.all()
 
-    def resolve_workers(self, info, **kwargs):
-        return Worker.objects.all()
-
     def resolve_sales(self, info, **kwargs):
         return Sales.objects.all()
 
     def resolve_supplies(self, info, **kwargs):
         return Supply.objects.all()
 
-
 # Define Mutations for all models
 class CreateTurul(graphene.Mutation):
     class Arguments:
         turul_name = graphene.String(required=True)
-        slug = graphene.String(required=True)
         description = graphene.String()
-        img = graphene.String()
+        img = graphene.String()  # Optional Base64-encoded image
 
-    turul = graphene.Field(TurulType)
+    turul = Field(lambda: TurulType)
 
-    def mutate(self, info, turul_name, slug, description=None, img=None):
-        turul = Turul(turul_name=turul_name, slug=slug, description=description, img=img)
+    def mutate(self, info, turul_name, description=None, img=None):
+        # Generate the slug if not provided
+        slug = slugify(turul_name)
+
+        # Process image if provided
+        image_path = None
+        if img:
+            try:
+                # Decode the Base64 image
+                decoded_image = base64.b64decode(img)
+            except (TypeError, ValueError):
+                raise ValueError("Invalid Base64-encoded image.")
+
+            # Define the image directory and file path
+            image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "turul")
+            os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
+            image_filename = f"{turul_name}_turul.jpg"  # Using slug for the image filename
+            image_path = os.path.join(image_dir, image_filename)
+
+            # Save the image to the local file system
+            with open(image_path, "wb") as image_file:
+                image_file.write(decoded_image)
+
+        # Create and save the Turul object
+        turul = Turul(
+            turul_name=turul_name,
+            slug=slug,
+            description=description,
+            img=f"photos/turul/{os.path.basename(image_path)}" if image_path else None,
+        )
         turul.save()
-        return CreateTurul(turul=turul)
 
+        return CreateTurul(turul=turul)
 
 class UpdateTurul(graphene.Mutation):
     class Arguments:
         turul_id = graphene.Int(required=True)
         turul_name = graphene.String()
-        slug = graphene.String()
         description = graphene.String()
-        img = graphene.String()
+        img = graphene.String()  # Optional Base64-encoded image
 
-    turul = graphene.Field(TurulType)
+    turul = Field(lambda: TurulType)
 
-    def mutate(self, info, turul_id, turul_name=None, slug=None, description=None, img=None):
-        turul = Turul.objects.get(pk=turul_id)
+    def mutate(self, info, turul_id, turul_name=None, description=None, img=None):
+        # Fetch the Turul object to update
+        try:
+            turul = Turul.objects.get(pk=turul_id)
+        except Turul.DoesNotExist:
+            raise ValueError("Turul with the given ID does not exist.")
+
+        # Update fields if provided
         if turul_name:
             turul.turul_name = turul_name
-        if slug:
-            turul.slug = slug
+            turul.slug = slugify(turul_name)  # Re-generate the slug if name is changed
+
         if description:
             turul.description = description
-        if img:
-            turul.img = img
-        turul.save()
-        return UpdateTurul(turul=turul)
 
+        # Process image if provided
+        if img:
+            try:
+                # Decode the Base64 image
+                decoded_image = base64.b64decode(img)
+            except (TypeError, ValueError):
+                raise ValueError("Invalid Base64-encoded image.")
+
+            # Define the image directory and file path
+            image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "turul")
+            os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
+            image_filename = f"{turul.slug}_turul.jpg"  # Using the slug for the image filename
+            image_path = os.path.join(image_dir, image_filename)
+
+            # Save the new image to the local file system
+            with open(image_path, "wb") as image_file:
+                image_file.write(decoded_image)
+
+            # Update the image path
+            turul.img = f"photos/turul/{os.path.basename(image_path)}"
+
+        # Save the updated Turul object
+        turul.save()
+
+        return UpdateTurul(turul=turul)
 
 class DeleteTurul(graphene.Mutation):
     class Arguments:
@@ -243,10 +298,16 @@ class DeleteTurul(graphene.Mutation):
     success = graphene.Boolean()
 
     def mutate(self, info, turul_id):
-        turul = Turul.objects.get(pk=turul_id)
-        turul.delete()
-        return DeleteTurul(success=True)
+        # Attempt to fetch the Turul object to delete
+        try:
+            turul = Turul.objects.get(pk=turul_id)
+        except Turul.DoesNotExist:
+            raise ValueError("Turul with the given ID does not exist.")
 
+        # Delete the Turul object
+        turul.delete()
+
+        return DeleteTurul(success=True)
 
 # CRUD operations for Baraa
 class CreateBaraa(graphene.Mutation):
@@ -314,20 +375,12 @@ class DeleteBaraa(graphene.Mutation):
         return DeleteBaraa(success=True)
 
 # Example for Branch
-class BranchType(graphene.ObjectType):
-    branch_id = graphene.Int()
-    branch_name = graphene.String()
-    img = graphene.String()
-    slug = graphene.String()
-    branch_location = graphene.String()
-
 
 class CreateBranch(Mutation):
     class Arguments:
         branch_name = String(required=True)
         img = String()  # Base64-encoded image
         branch_location = String()
-
     branch = Field(lambda: BranchType)
 
     def mutate(self, info, branch_name, img=None, branch_location=None):
@@ -428,8 +481,6 @@ class DeleteBranch(graphene.Mutation):
         branch = Branch.objects.get(pk=branch_id)
         branch.delete()
         return DeleteBranch(success=True)
-
-# Continue similarly for BranchBaraa, UserRole, Users, Worker, Sales, Supply
 
 # CRUD operations for BranchBaraa
 class CreateBranchBaraa(graphene.Mutation):
@@ -566,6 +617,7 @@ class DeleteUser(graphene.Mutation):
         user = Users.objects.get(pk=user_id)
         user.delete()
         return DeleteUser(success=True)
+    
 
 # CRUD operations for Worker
 class CreateWorker(graphene.Mutation):
@@ -573,66 +625,114 @@ class CreateWorker(graphene.Mutation):
         firstname = graphene.String(required=True)
         lastname = graphene.String(required=True)
         age = graphene.Int()
-        img = graphene.String()
+        img = graphene.String()  # Path or base64 string can be used
         geriinhayg = graphene.String()
         utasdugaar = graphene.String()
         position = graphene.String(required=True)
         salary = graphene.Float(required=True)
-        slug = graphene.String(required=True)
         branch_id = graphene.Int(required=True)
-        user_id = graphene.Int()
 
     worker = graphene.Field(WorkerType)
+    def mutate(self, info, firstname, lastname, position, salary, branch_id, img, age,geriinhayg,utasdugaar):
+        slug = slugify(firstname)
+        try:
+            branch = Branch.objects.get(pk=branch_id)
+        except Branch.DoesNotExist:
+            raise Exception("Branch does not exist")
+        image_path = None
+        if img:
+            try:
+                # Decode the Base64 image
+                decoded_image = base64.b64decode(img)
+            except (TypeError, ValueError):
+                raise ValueError("Invalid Base64-encoded image.")
 
-    def mutate(self, info, firstname, lastname, age=None, img=None, geriinhayg=None, utasdugaar=None, position=None, salary=None, slug=None, branch_id=None, user_id=None):
-        branch = Branch.objects.get(pk=branch_id)
-        user = Users.objects.get(pk=user_id) if user_id else None
-        worker = Worker(firstname=firstname, lastname=lastname, age=age, img=img, geriinhayg=geriinhayg, utasdugaar=utasdugaar, position=position, salary=salary, slug=slug, branch=branch, user=user)
+            # Define the image directory and file path
+            image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "worker")
+            os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
+            image_filename = f"{firstname}_{lastname}_worker.jpg"
+            image_path = os.path.join(image_dir, image_filename)
+
+            # Save the image to the local file system
+            with open(image_path, "wb") as image_file:
+                image_file.write(decoded_image)
+        worker = Worker(
+            firstname=firstname,
+            lastname=lastname,
+            age=age,
+            img=f"photos/worker/{os.path.basename(image_path)}" if image_path else None,
+            geriinhayg=geriinhayg,
+            utasdugaar=utasdugaar,
+            position=position,
+            slug=slug,
+            salary=salary,
+            branch=branch
+        )
+
         worker.save()
         return CreateWorker(worker=worker)
-
+    
 class UpdateWorker(graphene.Mutation):
     class Arguments:
-        worker_id = graphene.Int(required=True)
-        firstname = graphene.String()
-        lastname = graphene.String()
+        worker_id = graphene.Int(required=True)  # ID of the worker to update
+        firstname = graphene.String(required=True)
+        lastname = graphene.String(required=True)
         age = graphene.Int()
-        img = graphene.String()
+        img = graphene.String()  # Path or base64 string can be used
         geriinhayg = graphene.String()
         utasdugaar = graphene.String()
-        position = graphene.String()
-        salary = graphene.Float()
-        slug = graphene.String()
-        branch_id = graphene.Int()
-        user_id = graphene.Int()
+        position = graphene.String(required=True)
+        salary = graphene.Float(required=True)
+        branch_id = graphene.Int(required=True)
 
     worker = graphene.Field(WorkerType)
 
-    def mutate(self, info, worker_id, firstname=None, lastname=None, age=None, img=None, geriinhayg=None, utasdugaar=None, position=None, salary=None, slug=None, branch_id=None, user_id=None):
-        worker = Worker.objects.get(pk=worker_id)
-        if firstname:
-            worker.firstname = firstname
-        if lastname:
-            worker.lastname = lastname
-        if age:
-            worker.age = age
-        if img:
-            worker.img = img
-        if geriinhayg:
-            worker.geriinhayg = geriinhayg
-        if utasdugaar:
-            worker.utasdugaar = utasdugaar
-        if position:
-            worker.position = position
-        if salary:
-            worker.salary = salary
-        if slug:
-            worker.slug = slug
-        if branch_id:
-            worker.branch = Branch.objects.get(pk=branch_id)
-        if user_id:
-            worker.user = Users.objects.get(pk=user_id)
-        worker.save()
+    def mutate(self, info, worker_id, firstname, lastname, position, salary, branch_id, img=None, age=None, geriinhayg=None, utasdugaar=None):
+        try:
+            worker = Worker.objects.get(pk=worker_id)
+        except Worker.DoesNotExist:
+            raise Exception("Worker does not exist")
+
+        # Update fields
+        worker.firstname = firstname
+        worker.slug = slugify(firstname)
+        worker.lastname = lastname
+        worker.position = position
+        worker.salary = salary
+        worker.age = age
+        worker.geriinhayg = geriinhayg
+        worker.utasdugaar = utasdugaar
+
+        # Update branch
+        try:
+            branch = Branch.objects.get(pk=branch_id)
+            worker.branch = branch
+        except Branch.DoesNotExist:
+            raise Exception("Branch does not exist")
+
+        # Handle image update
+        if img is not None:
+            if img.startswith('data:image/'):  # Check if it's a base64 string
+                try:
+                    # Decode the Base64 image
+                    decoded_image = base64.b64decode(img.split(',')[1])  # Remove the prefix
+                except (TypeError, ValueError):
+                    raise ValueError("Invalid Base64-encoded image.")
+
+                # Define the image directory and file path
+                image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "worker")
+                os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
+                image_filename = f"{firstname}_{lastname}_worker.jpg"
+                image_path = os.path.join(image_dir, image_filename)
+
+                # Save the image to the local file system
+                with open(image_path, "wb") as image_file:
+                    image_file.write(decoded_image)
+
+                worker.img = f"photos/worker/{os.path.basename(image_path)}"  # Update the image path
+
+        worker.slug = slugify(f"{firstname} {lastname}")  # Update slug based on name
+        worker.save()  # Save the updated worker instance
         return UpdateWorker(worker=worker)
 
 class DeleteWorker(graphene.Mutation):
@@ -642,9 +742,12 @@ class DeleteWorker(graphene.Mutation):
     success = graphene.Boolean()
 
     def mutate(self, info, worker_id):
-        worker = Worker.objects.get(pk=worker_id)
-        worker.delete()
-        return DeleteWorker(success=True)
+        try:
+            worker = Worker.objects.get(pk=worker_id)
+            worker.delete()
+            return DeleteWorker(success=True)
+        except Worker.DoesNotExist:
+            raise ValueError("Worker with the given ID does not exist.")
 
 # CRUD operations for Sales
 class CreateSales(graphene.Mutation):
@@ -751,7 +854,12 @@ class Mutation(graphene.ObjectType):
     update_branch = UpdateBranch.Field()
     delete_branch = DeleteBranch.Field()
 
+    create_worker = CreateWorker.Field()
+    update_worker = UpdateWorker.Field()
+    delete_worker = DeleteWorker.Field()
     # ... other mutations ...
 
 # Create schema
 schema = graphene.Schema(query=Query, mutation=Mutation)
+
+
