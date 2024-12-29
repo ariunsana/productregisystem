@@ -42,14 +42,19 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="bg-secondary rounded-lg p-6 shadow-md">
-        <h2 class="text-xl font-semibold mb-4 text-center">Шилдэг 5 бүтээгдэхүүн</h2>
+        <h2 class="text-xl font-semibold mb-4 text-center">Салбарын тоо</h2>
         <div id="bar-chart"></div>
       </div>
       <div class="bg-secondary rounded-lg p-6 shadow-md">
-        <h2 class="text-xl font-semibold mb-4 text-center">Худалдан авалт, борлуулалтын захиалга</h2>
-        <div id="area-chart"></div>
+        <h2 class="text-xl font-semibold mb-4 text-center">Салбаруудын зүйлсийн хувиар</h2>
+        <div id="pie-chart"></div>
+      </div>
+      <!-- Fixed the closing div tag here -->
+      <div class="bg-secondary rounded-lg p-6 shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-center">Хугацааны хандлага</h2>
+        <div id="line-chart"></div>
       </div>
     </div>
   </main>
@@ -57,6 +62,172 @@
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script>
-  <script src="{% static 'js/scripts.js' %}"></script>
 
+  <script>
+    const barChartOptions = {
+      series: [
+        {
+          data: {{ chart_data.counts|safe }},
+          name: "Counts",
+        },
+      ],
+      chart: {
+        type: "bar",
+        background: "transparent",
+        height: 350,
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: ["#2962ff", "#d50000", "#2e7d32"],
+      plotOptions: {
+        bar: {
+          distributed: true,
+          borderRadius: 4,
+          horizontal: false,
+          columnWidth: "40%",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      fill: {
+        opacity: 1,
+      },
+      grid: {
+        borderColor: "#55596e",
+        yaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+      },
+      legend: {
+        labels: {
+          colors: "#f5f7ff",
+        },
+        show: true,
+        position: "top",
+      },
+      stroke: {
+        colors: ["transparent"],
+        show: true,
+        width: 2,
+      },
+      tooltip: {
+        shared: true,
+        intersect: false,
+        theme: "dark",
+      },
+      xaxis: {
+        categories: {{ chart_data.labels|safe }},
+        title: {
+          style: {
+            color: "#f5f7ff",
+          },
+        },
+        axisBorder: {
+          show: true,
+          color: "#55596e",
+        },
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: ["#f5f7ff"],
+          },
+        },
+      },
+    };
+  
+    const barChart = new ApexCharts(
+      document.querySelector("#bar-chart"),
+      barChartOptions
+    );
+    barChart.render();
+
+    const pieChartOptions = {
+      series: {{ branch_chart_data.counts|safe }},
+      chart: {
+        type: "pie",
+        height: 350,
+      },
+      labels: {{ branch_chart_data.labels|safe }},
+      colors: ["#1E90FF", "#FF6347", "#32CD32", "#FFD700"],
+      legend: {
+        labels: {
+          colors: "#f5f7ff",
+        },
+        show: true,
+        position: "bottom",
+      },
+      tooltip: {
+        theme: "dark",
+      },
+    };
+
+    const pieChart = new ApexCharts(
+      document.querySelector("#pie-chart"),
+      pieChartOptions
+    );
+    pieChart.render();
+
+    const lineChartOptions = {
+      series: [
+        {
+          name: "Sales",
+          data: [10, 20, 30, 40, 50, 60],
+        },
+      ],
+      chart: {
+        type: "line",
+        height: 350,
+        background: "transparent",
+      },
+      colors: ["#ff6600"],
+      stroke: {
+        width: 2,
+        curve: "smooth",
+      },
+      grid: {
+        borderColor: "#55596e",
+      },
+      xaxis: {
+        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        title: {
+          text: "Month",
+          style: {
+            color: "#f5f7ff",
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: "Sales (in units)",
+          style: {
+            color: "#f5f7ff",
+          },
+        },
+        labels: {
+          style: {
+            colors: ["#f5f7ff"],
+          },
+        },
+      },
+      tooltip: {
+        theme: "dark",
+      },
+    };
+
+    const lineChart = new ApexCharts(
+      document.querySelector("#line-chart"),
+      lineChartOptions
+    );
+    lineChart.render();
+  </script>
 {% endblock %}

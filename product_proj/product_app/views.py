@@ -242,46 +242,67 @@ def delete_branch(request, branch_id):
         request, "branch/delete_branch.html", {"branch_id": branch_id}
     )  # Render a confirmation page for deletion
 
+
+
 def index(request):
-    # Fetch the count of Baraas
-    baraa_query = """
-    query {
-        baraas {
-            baraaId
-        }
-    }
-    """
-    baraa_data = fetch_graphql_data(baraa_query)
-    baraa_count = len(baraa_data.get("data", {}).get("baraas", []))
+    # Fetch data from the API
+    try:
+        baraa_query = """query { baraas { baraaId } }"""
+        baraa_data = fetch_graphql_data(baraa_query)
+        baraa_count = len(baraa_data.get("data", {}).get("baraas", []))
+    except Exception as e:
+        baraa_count = 0
+        print(f"Error fetching baraa data: {e}")
 
-    # Fetch the count of Turuls
-    turul_query = """
-    query {
-        turuls {
-            turulId
-        }
-    }
-    """
-    turul_data = fetch_graphql_data(turul_query)
-    turul_count = len(turul_data.get("data", {}).get("turuls", []))
+    try:
+        turul_query = """query { turuls { turulId } }"""
+        turul_data = fetch_graphql_data(turul_query)
+        turul_count = len(turul_data.get("data", {}).get("turuls", []))
+    except Exception as e:
+        turul_count = 0
+        print(f"Error fetching turul data: {e}")
 
-    # Fetch the count of Workers
-    worker_query = """
-    query {
-        workers {
-            workerId
-        }
-    }
-    """
-    worker_data = fetch_graphql_data(worker_query)
-    worker_count = len(worker_data.get("data", {}).get("workers", []))
+    try:
+        worker_query = """query { workers { workerId } }"""
+        worker_data = fetch_graphql_data(worker_query)
+        worker_count = len(worker_data.get("data", {}).get("workers", []))
+    except Exception as e:
+        worker_count = 0
+        print(f"Error fetching worker data: {e}")
 
-    # Pass the counts to the template
+    # Prepare branch data
+    branches = [
+        {"branchName": "Драгон салбар"},
+        {"branchName": "Emart Чингис"},
+        {"branchName": "Emart Баянгол"},
+        {"branchName": "Emart Хан-Уул"},
+    ]
+    branch_names = [branch["branchName"] for branch in branches]
+    branch_counts = [10, 20, 15, 30]  # Replace with dynamic data if available
+
+    # Pass counts and labels for the charts
+    chart_data = {
+        "labels": ["БАРАА", "ТӨРӨЛ", "ХУДАЛДАГЧ"],
+        "counts": [baraa_count, turul_count, worker_count],
+    }
+
+    branch_chart_data = {
+        "labels": branch_names,
+        "counts": branch_counts,
+    }
+
+    # Render the template with all context data
     return render(request, "index.html", {
         "baraa_count": baraa_count,
         "turul_count": turul_count,
         "worker_count": worker_count,
+        "chart_data": chart_data,
+        "branch_chart_data": branch_chart_data,
     })
+
+
+
+
 
 def signin(request):
     return render(request, "signin.html")
