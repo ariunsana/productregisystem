@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block ss %}
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Шинэ бараа нэмэх</h2>
+
+  <form
+    method="POST"
+    action="{% url 'create_baraa' %}"
+    enctype="multipart/form-data"
+    class="bg-secondary p-6 rounded-lg shadow-lg max-w-lg"
+  >
+    {% csrf_token %}
+    
+    <div class="mb-4">
+      <label for="baraaName" class="block text-gray-400 mb-2">Барааны нэр</label>
+      <input
+        type="text"
+        id="baraaName"
+        name="baraaName"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="baraaUne" class="block text-gray-400 mb-2">Барааны үнэ</label>
+      <input
+        type="number"
+        id="baraaUne"
+        name="baraaUne"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="mashinMark" class="block text-gray-400 mb-2">Машины марк</label>
+      <input
+        type="text"
+        id="mashinMark"
+        name="mashinMark"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="img" class="block text-gray-400 mb-2">Зураг</label>
+      <input
+        type="file"
+        id="img"
+        name="img"
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="description" class="block text-gray-400 mb-2">Тайлбар</label>
+      <textarea
+        id="description"
+        name="description"
+        rows="4"
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      ></textarea>
+    </div>
+
+    <div class="mb-4">
+      <label for="stock" class="block text-gray-400 mb-2">Нийт тоо</label>
+      <input
+        type="number"
+        id="stock"
+        name="stock"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="isAvailable" class="block text-gray-400 mb-2">Бараа бэлэн үү?</label>
+      <select
+        id="isAvailable"
+        name="isAvailable"
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
+        <option value="true">Тийм</option>
+        <option value="false">Үгүй</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="turulId" class="block text-gray-400 mb-2">Турл сонгох</label>
+      <select
+        id="turulId"
+        name="turulId"
+        required
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
+        <option value="">Турл сонгох</option>
+        {% for turul in turuls %}
+        <option value="{{ turul.turulId }}">{{ turul.turulName }}</option>  <!-- Adjust according to your Turul model -->
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center justify-center space-x-2"
+      >
+        <span class="material-icons-outlined">add</span>
+        <span>Нэмэх</span>
+      </button>
+    </div>
+  </form>
+</main>
+{% endblock %}

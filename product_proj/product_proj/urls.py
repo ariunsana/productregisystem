@@ -23,7 +23,9 @@ urlpatterns = [
     path('index/', views.index, name="index"),
     path('', views.signin, name='signin'),
     path('register/', views.register, name='register'),
+    # baraa
     path('products/', views.products, name='products'),
+    path('products/create/', views.create_baraa, name='create_baraa'),
     # branch
     path('branch_list/', views.branch_list, name='branch_list'),
     path('branch/create/', views.create_branch, name='create_branch'),

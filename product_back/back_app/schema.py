@@ -66,6 +66,20 @@ class TurulType(graphene.ObjectType):
     slug = graphene.String()
     description = graphene.String()
 
+class BaraaType(graphene.ObjectType):
+    baraa_id = graphene.Int()
+    baraa_name = graphene.String()
+    baraa_une = graphene.Float()
+    img = graphene.String()
+    stock = graphene.Int()
+    is_available = graphene.Boolean()  # Added the is_available field
+    description = graphene.String()
+    mashin_mark = graphene.String()
+    turul = graphene.String()
+
+
+
+
 class UserType(graphene.ObjectType):
     id = graphene.ID()
     username = graphene.String()
@@ -144,14 +158,14 @@ class LoginUser(graphene.Mutation):
 class Query(graphene.ObjectType):
     # Query all models
     turuls = graphene.List(TurulType, turul_id=graphene.Int())
-    baraas = graphene.List(BaraaType)
+    baraas = graphene.List(BaraaType, baraa_id=graphene.Int())
     branches = graphene.List(BranchType, branch_id=graphene.Int())
     branch_baraas = graphene.List(BranchBaraaType)
     user_roles = graphene.List(UserRoleType)
     users = graphene.List(UsersType)
     sales = graphene.List(SalesType)
     supplies = graphene.List(SupplyType)
-    workers = graphene.List(WorkerType)
+    workers = graphene.List(WorkerType) 
     worker = graphene.Field(WorkerType, worker_id=graphene.Int())
 
     def resolve_workers(self, info, **kwargs):
@@ -172,9 +186,14 @@ class Query(graphene.ObjectType):
             # Otherwise, return all turuls
             return Turul.objects.all()
 
-    def resolve_baraas(self, info, **kwargs):
-        return Baraa.objects.all()
+    # def resolve_baraas(self, info, **kwargs):
+    #     return Baraa.objects.all()
 
+    def resolve_baraas(self, info, baraa_id=None, **kwargs):
+        if baraa_id is not None:
+            return Baraa.objects.filter(pk=baraa_id)
+        return Baraa.objects.all()
+        
     def resolve_branches(self, info, branch_id=None, **kwargs):
         if branch_id:
             # If branch_id is provided, filter by branch_id
@@ -314,18 +333,53 @@ class CreateBaraa(graphene.Mutation):
     class Arguments:
         baraa_name = graphene.String(required=True)
         baraa_une = graphene.Int(required=True)
-        slug = graphene.String(required=True)
         mashin_mark = graphene.String(required=True)
-        img = graphene.String()
+        img = graphene.String()  # Base64-encoded image
         description = graphene.String()
         stock = graphene.Int()
         is_available = graphene.Boolean()
+        turul_id = graphene.String()
 
     baraa = graphene.Field(BaraaType)
 
-    def mutate(self, info, baraa_name, baraa_une, slug, mashin_mark, img=None, description=None, stock=0, is_available=True):
-        baraa = Baraa(baraa_name=baraa_name, baraa_une=baraa_une, slug=slug, mashin_mark=mashin_mark, img=img, description=description, stock=stock, is_available=is_available)
+    def mutate(self, info, baraa_name, baraa_une, mashin_mark, turul_id, img=None, description=None, stock=0, is_available=True,):
+        # Generate the slug from the baraa_name
+        slug = slugify(baraa_name)
+
+        # Prepare the image file if provided
+        image_path = None
+        if img:
+            try:
+                # Decode the Base64 image
+                decoded_image = base64.b64decode(img)
+            except (TypeError, ValueError):
+                raise ValueError("Invalid Base64-encoded image.")
+
+            # Define the image directory and file path
+            image_dir = os.path.join(settings.MEDIA_ROOT, "photos", "baraa")
+            os.makedirs(image_dir, exist_ok=True)  # Ensure the directory exists
+            image_filename = f"{slug}_baraa.jpg"  # Use slug for the image filename
+            image_path = os.path.join(image_dir, image_filename)
+
+            # Save the image to the local file system
+            with open(image_path, "wb") as image_file:
+                image_file.write(decoded_image)
+
+        # Create a new Baraa instance
+        baraa = Baraa(
+            baraa_name=baraa_name,
+            baraa_une=baraa_une,
+            mashin_mark=mashin_mark,
+            img=f"photos/baraa/{os.path.basename(image_path)}" if image_path else None,
+            description=description,
+            stock=stock,
+            is_available=is_available,
+            slug=slug,  # Ensure slug is included
+        )
+
+        # Save the baraa to the database
         baraa.save()
+
         return CreateBaraa(baraa=baraa)
 
 class UpdateBaraa(graphene.Mutation):
@@ -857,6 +911,8 @@ class Mutation(graphene.ObjectType):
     create_worker = CreateWorker.Field()
     update_worker = UpdateWorker.Field()
     delete_worker = DeleteWorker.Field()
+
+    create_baraa = CreateBaraa.Field()
     # ... other mutations ...
 
 # Create schema

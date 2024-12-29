@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block ss %}
+{% include 'sidebar.html' %}
+
+<main class="col-span-full lg:col-start-2 row-start-2 p-8">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white mb-4">Бүтээгдэхүүнүүд</h2>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+            <div class="relative w-full sm:w-64">
+                <input type="text" placeholder="Хайх..." class="w-full bg-secondary text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <span class="material-icons-outlined absolute left-3 top-2 text-gray-400">search</span>
+            </div>
+            <a href="{% url 'create_baraa' %}" class="w-full sm:w-auto">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2">
+                    <span class="material-icons-outlined">add</span>
+                    <span>Шинэ бүтээгдэхүүн</span>
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {% for baraa in baraas %}
+        <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            <!-- Product Image Section -->
+            <div class="relative">
+                <img src="{% if baraa.img %}http://127.0.0.1:8080/media/{{ baraa.img }}{% else %}{% static 'images/default.png' %}{% endif %}" 
+                     alt="{{ baraa.baraaName }}" 
+                     class="w-full h-48 object-cover">
+                     <div class="absolute top-0 right-0 p-2 group">
+                        <button class="text-white hover:text-red-500">
+                            <span class="material-icons-outlined">more_vert</span>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div class="hidden group-hover:block absolute right-0 bg-secondary rounded-lg shadow-lg mt-2 w-32">
+                            <a href="" class="block px-4 py-2 text-white hover:bg-blue-600">
+                                <span class="material-icons-outlined text-sm mr-2">edit</span>
+                                Засах
+                            </a>
+                            <form method="POST" action="" onsubmit="return confirm('Та энэ салбарыг устгахад итгэлтэй байна уу?');">
+                                {% csrf_token %}
+                                <button type="submit" class="w-full text-left px-4 py-2 text-white hover:bg-red-600">
+                                  <span class="material-icons-outlined text-sm mr-2">delete</span>
+                                  Устгах
+                                </button>
+                              </form>
+                              
+                            </form>
+                        </div>
+                    </div>
+            </div>
+            
+            <!-- Product Details Section -->
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-1">{{ baraa.baraaName }}</h3>
+                <p class="text-sm text-gray-400 mb-2">{{ baraa.description }}</p>
+                <p class="text-sm text-gray-400 mb-2">Mashin Mark: {{ baraa.mashinMark }}</p>
+                <p class="text-sm text-gray-400 mb-2">Turul: {{ baraa.turul }}</p>
+                
+                <!-- Display Price -->
+                <div class="flex justify-between items-center mt-4">
+                    <p class="text-xl font-bold text-green-500">₮{{ baraa.baraaUne|floatformat:2 }}</p>
+                    <p class="text-sm text-gray-400">Available: {{ baraa.isAvailable|yesno:"Yes,No" }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
+</main>
+
+{% endblock %}

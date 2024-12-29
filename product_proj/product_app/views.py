@@ -243,7 +243,45 @@ def delete_branch(request, branch_id):
     )  # Render a confirmation page for deletion
 
 def index(request):
-    return render(request, "index.html")
+    # Fetch the count of Baraas
+    baraa_query = """
+    query {
+        baraas {
+            baraaId
+        }
+    }
+    """
+    baraa_data = fetch_graphql_data(baraa_query)
+    baraa_count = len(baraa_data.get("data", {}).get("baraas", []))
+
+    # Fetch the count of Turuls
+    turul_query = """
+    query {
+        turuls {
+            turulId
+        }
+    }
+    """
+    turul_data = fetch_graphql_data(turul_query)
+    turul_count = len(turul_data.get("data", {}).get("turuls", []))
+
+    # Fetch the count of Workers
+    worker_query = """
+    query {
+        workers {
+            workerId
+        }
+    }
+    """
+    worker_data = fetch_graphql_data(worker_query)
+    worker_count = len(worker_data.get("data", {}).get("workers", []))
+
+    # Pass the counts to the template
+    return render(request, "index.html", {
+        "baraa_count": baraa_count,
+        "turul_count": turul_count,
+        "worker_count": worker_count,
+    })
 
 def signin(request):
     return render(request, "signin.html")
@@ -251,8 +289,113 @@ def signin(request):
 def register(request):
     return render(request, "register.html")
 
+
 def products(request):
-    return render(request, "products.html")
+    query = """
+    query BaraaListQuery {
+        baraas {
+            baraaId
+            baraaName
+            img
+            description
+            stock
+            isAvailable
+            mashinMark
+            turul
+            baraaUne
+  }
+}
+    """
+    data = fetch_graphql_data(query)
+
+    if data and "data" in data and "baraas" in data["data"]:
+        baraa_data = data["data"]["baraas"]
+        print(baraa_data)  # Debugging line to check the structure
+    else:
+        baraa_data = []  # Default to empty list if no data
+
+    return render(request, "baraa/products.html", {"baraas": baraa_data})
+
+# baraas crud
+def create_baraa(request):
+    # Fetch turuls for the dropdown
+    turul_query = """
+    query {
+        turuls {
+            turulId
+            turulName
+        }
+    }
+    """
+    turul_data = fetch_graphql_data(turul_query)
+    turuls = turul_data.get("data", {}).get("turuls", [])
+
+    if request.method == "POST":
+        baraa_name = request.POST.get("baraaName")
+        baraa_une = request.POST.get("baraaUne")
+        mashin_mark = request.POST.get("mashinMark")
+        img = request.FILES.get("img")
+        description = request.POST.get("description")
+        stock = request.POST.get("stock")
+        is_available = request.POST.get("isAvailable") == 'true'  # Convert to boolean
+        turul_id = request.POST.get("turulId")  # Get the turul_id from the form
+
+        # Convert image to base64 if provided
+        base64_img = None
+        if img:
+            file_content = img.read()
+            base64_img = base64.b64encode(file_content).decode("utf-8")
+
+        mutation = """
+        mutation CreateBaraa($baraaName: String!, $baraaUne: Int!, $mashinMark: String!, $img: String, $description: String, $stock: Int, $isAvailable: Boolean, $turulId: Int!) {
+            createBaraa(baraaName: $baraaName, baraaUne: $baraaUne, mashinMark: $mashinMark, img: $img, description: $description, stock: $stock, isAvailable: $isAvailable, turulId: $turulId) {
+                baraa {
+                    baraaId
+                    baraaName
+                    img
+                    description
+                    stock
+                    isAvailable
+                    mashinMark
+                    slug
+                }
+            }
+        }
+        """
+
+        variables = {
+            "baraaName": baraa_name,
+            "baraaUne": baraa_une,
+            "mashinMark": mashin_mark,
+            "img": base64_img,  # Send base64 encoded image
+            "description": description,
+            "stock": stock,
+            "isAvailable": is_available,
+            "turulId": turul_id,  # Include turul_id in the variables
+        }
+
+        response_data = fetch_graphql_data(mutation, variables)
+
+        if response_data is None:
+            return render(
+                request, "create_baraa.html", {"error": "Failed to create Baraa", "turuls": turuls}
+            )
+
+        if "errors" in response_data:
+            return render(
+                request,
+                "create_baraa.html",
+                {"error": response_data["errors"][0]["message"], "turuls": turuls},
+            )
+
+        if "data" in response_data and "createBaraa" in response_data["data"]:
+            return redirect("baraa_list")  # Redirect to the list of Baraas
+        else:
+            return render(
+                request, "create_baraa.html", {"error": "Failed to create Baraa", "turuls": turuls}
+            )
+
+    return render(request, "baraa/create_baraa.html", {"turuls": turuls})
 
 def settings(request):
     return render(request, "settings.html")
@@ -756,3 +899,5 @@ def delete_turul(request, turul_id):
     return render(
         request, "turul/delete_turul.html", {"turul_id": turul_id}
     )  # Render a confirmation page for deletion
+
+

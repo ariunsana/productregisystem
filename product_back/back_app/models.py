@@ -25,6 +25,11 @@ class Baraa(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     turul = models.ForeignKey(Turul, on_delete=models.CASCADE, null=False)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.baraa_name)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.baraa_name
 
