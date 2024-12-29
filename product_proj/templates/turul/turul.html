@@ -24,10 +24,26 @@
         <div class="bg-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
             <div class="relative h-48">
                 <img src="http://127.0.0.1:8080/media/{{ turul.img }}" alt="{{ turul.turulName }}" class="w-full h-full object-cover">
-                <div class="absolute top-0 right-0 p-2">
+                <div class="absolute top-0 right-0 p-2 group">
                     <button class="text-white hover:text-red-500">
                         <span class="material-icons-outlined">more_vert</span>
                     </button>
+                    <!-- Dropdown menu -->
+                    <div class="hidden group-hover:block absolute right-0 bg-secondary rounded-lg shadow-lg mt-2 w-32">
+                        <a href="{% url 'update_turul' turul.turulId %}" class="block px-4 py-2 text-white hover:bg-blue-600">
+                            <span class="material-icons-outlined text-sm mr-2">edit</span>
+                            Засах
+                        </a>
+                        <form method="POST" action="{% url 'delete_turul' turul.turulId %}" onsubmit="return confirm('Та энэ салбарыг устгахад итгэлтэй байна уу?');">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full text-left px-4 py-2 text-white hover:bg-red-600">
+                              <span class="material-icons-outlined text-sm mr-2">delete</span>
+                              Устгах
+                            </button>
+                          </form>
+                          
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="p-4">

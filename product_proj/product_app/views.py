@@ -262,6 +262,7 @@ def report(request):
 
 def notifications(request):
     return render(request, "notifications.html")
+
 def worker_list(request):
     """
     View to fetch and display the list of workers.
